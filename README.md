@@ -1,5 +1,13 @@
 # Bench
 
+#### Table of Contents
+- [Purpose](#purpose)
+- [Requirements](#requirements)
+- [Usage Cases](#usage-cases)
+- [Example](#example)
+- [Performance](#performance)
+- [Design](#design)
+
 ## Purpose
 
 Bench is a general performance benchmarker that performs simple calculations with the obtained data and lets the user perform other necessary calculations.  Bench handles the number of times to run the function internally.  Bench does not keep data with negative values, such as memory when it has been GC'ed or when your function transcends time itself.  
@@ -84,4 +92,36 @@ bench(bench, function() end)
 --			541	(5.140e2 to 5.140e2)
 ```
 
+## Design
+
+`bench`: Takes in a function and its arguments and returns benchmark data.  The benchmark data is of the type: 
+```luau
+type BenchHistogram = {
+	[number]: number,
+	Range: number,
+}
+type BenchMetric = {
+	Data: {number},
+	Total: number,
+	Average: number,
+	Minimum: number,
+	Maximum: number,
+	Low: number,
+	Median: number,
+	High: number,
+	Histogram: BenchHistogram
+}
+type BenchData = {
+	Name: string,
+	Speed: BenchMetric,
+	Memory: BenchMetric,
+
+	print: (self: BenchData)-> BenchData,
+	-- will be explained later
+	compare: (self: BenchData, ...BenchData) -> BenchCompareData,
+	withName: (self: BenchData, name: string) -> BenchData
+}
+```
+`print`: Returns the input benchmark data after printing a summary of the data.
+`withName`: Returns the input benchmark data after changing the Name property to the input string.
 
