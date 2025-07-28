@@ -62,24 +62,24 @@ The speed / memory usage of this module matters not, however here are metrics ab
 bench(bench, function() end)
 	:withName("Bench"):print()
 
---Name: Bench
+--Bench
 --	Speed: 
---		Min:	2.439e-3
---		Low:	2.934e-3
---		Median:	6.107e-3
---		Avg:	6.327e-3
---		High:	1.200e-2
---		Max:	3.106e-2
---		Total:	5.004e0
+--		Min:	4.320e-3
+--		Low:	4.385e-3
+--		Median:	5.210e-3
+--		Avg:	5.124e-3
+--		High:	6.474e-3
+--		Max:	8.232e-3
+--		Total:	5.001e0
 --		Histogram:
---			78	(2.934e-3 to 4.069e-3)
---			119	(4.069e-3 to 5.203e-3)
---			284	(5.203e-3 to 6.337e-3)
---			134	(6.337e-3 to 7.471e-3)
---			77	(7.471e-3 to 8.606e-3)
---			65	(8.606e-3 to 9.740e-3)
---			9	(9.740e-3 to 1.087e-2)
---			10	(1.087e-2 to 1.200e-2)
+--			186	(4.385e-3 to 4.646e-3)
+--			76	(4.646e-3 to 4.907e-3)
+--			156	(4.907e-3 to 5.169e-3)
+--			418	(5.169e-3 to 5.430e-3)
+--			93	(5.430e-3 to 5.691e-3)
+--			15	(5.691e-3 to 5.952e-3)
+--			9	(5.952e-3 to 6.213e-3)
+--			4	(6.213e-3 to 6.474e-3)
 --	Memory: 
 --		Min:	5.130e2
 --		Low:	5.140e2
@@ -87,9 +87,9 @@ bench(bench, function() end)
 --		Avg:	5.139e2
 --		High:	5.140e2
 --		Max:	5.140e2
---		Total:	2.708e5
+--		Total:	3.335e5
 --		Histogram:
---			527	(5.140e2 to 5.140e2)
+--			649	(5.140e2 to 5.140e2)
 ```
 
 ## Design
