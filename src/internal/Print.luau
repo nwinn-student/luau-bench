@@ -8,8 +8,10 @@ type BenchCompareData = Variant.BenchCompareData
 
 Variant = nil
 
+local Print = {}
 
-function precision(x: number, n: number)
+@native
+local function precision(x: number, n: number)
 	local value = nil
 	if math.abs(x) < 1e-9 then
 		value = '0e0'
@@ -38,65 +40,89 @@ function precision(x: number, n: number)
 	return first..'e'..temp[2]
 end
 
-local Print = {}
-
-function metricPrint(data: BenchMetric, other: BenchMetric?)
+-- new to replace
+local function metricString(data: number, other: number?, name: string)
+	if data ~= 0 and (if other and other ~= 0 then true else not other) then
+		
+	end
+end
+--[[
+	Regular:
+		Min: 1.234e-5
+	Compare:
+		Min: +1.234e-5  (+15%)
+]]
+local function metricPrint(data: BenchMetric, other: BenchMetric?)
 	-- If any aspect is 0 we should NOT display it
 	local str = ""
 	
 	if data.Minimum ~= 0 
 		and (if other and other.Minimum ~= 0 then true else not other)
 	then
-		str ..= `\n        Min:    {precision(data.Minimum, 4)}{
-			if other then "%  "..precision(other.Minimum, 4)
+		str ..= `\n        Min:    {
+			if other then math.sign(data.Minimum) == 1 and "+" or "" else ""
+		}{ precision(data.Minimum, 4) }{
+			if other then `  ({ math.sign(other.Minimum) == 1 and "+" or "" }{ math.round(other.Minimum) }%)`
 			else ""
 		}`
 	end
 	if data.Low ~= 0 
 		and (if other and other.Low ~= 0 then true else not other)
 	then
-		str ..= `\n        Low:    {precision(data.Low, 4)}{
-			if other then "%  "..precision(other.Low, 4)
+		str ..= `\n        Low:    {
+			if other then math.sign(data.Low) == 1 and "+" or "" else ""
+		}{ precision(data.Low, 4) }{
+			if other then `  ({ math.sign(other.Low) == 1 and "+" or "" }{ math.round(other.Low) }%)`
 			else ""
 		}`
 	end
 	if data.Median ~= 0 
 		and (if other and other.Median ~= 0 then true else not other)
 	then
-		str ..= `\n        Median: {precision(data.Median, 4)}{
-			if other then "%  "..precision(other.Median, 4)
+		str ..= `\n        Median: {
+			if other then math.sign(data.Median) == 1 and "+" or "" else ""
+		}{ precision(data.Median, 4) }{
+			if other then `  ({ math.sign(other.Median) == 1 and "+" or "" }{ math.round(other.Median) }%)`
 			else ""
 		}`
 	end
 	if data.Average ~= 0 
 		and (if other and other.Average ~= 0 then true else not other)
 	then
-		str ..= `\n        Avg:    {precision(data.Average, 4)}{
-			if other then "%  "..precision(other.Average, 4)
+		str ..= `\n        Avg:    {
+			if other then math.sign(data.Average) == 1 and "+" or "" else ""
+		}{ precision(data.Average, 4) }{
+			if other then `  ({ math.sign(other.Average) == 1 and "+" or "" }{ math.round(other.Average) }%)`
 			else ""
 		}`
 	end
 	if data.High ~= 0 
 		and (if other and other.High ~= 0 then true else not other)
 	then
-		str ..= `\n        High:   {precision(data.High, 4)}{
-			if other then "%  "..precision(other.High, 4)
+		str ..= `\n        High:   {
+			if other then math.sign(data.High) == 1 and "+" or "" else ""
+		}{ precision(data.High, 4) }{
+			if other then `  ({ math.sign(other.High) == 1 and "+" or "" }{ math.round(other.High) }%)`
 			else ""
 		}`
 	end
 	if data.Maximum ~= 0 
 		and (if other and other.Maximum ~= 0 then true else not other)
 	then
-		str ..= `\n        Max:    {precision(data.Maximum, 4)}{
-			if other then "%  "..precision(other.Maximum, 4)
+		str ..= `\n        Max:    {
+			if other then math.sign(data.Maximum) == 1 and "+" or "" else ""
+		}{ precision(data.Maximum, 4) }{
+			if other then `  ({ math.sign(other.Maximum) == 1 and "+" or "" }{ math.round(other.Maximum) }%)`
 			else ""
 		}`
 	end
 	if data.Total ~= 0 
 		and (if other and other.Total ~= 0 then true else not other)
 	then
-		str ..= `\n        Total:  {precision(data.Total, 4)}{
-			if other then "%  "..precision(other.Total, 4)
+		str ..= `\n        Total:  {
+			if other then math.sign(data.Total) == 1 and "+" or "" else ""
+		}{ precision(data.Total, 4) }{
+			if other then `  ({ math.sign(other.Total) == 1 and "+" or ""}{ math.round(other.Total) }%)`
 			else ""
 		}`
 	end
@@ -138,7 +164,7 @@ function Print.benchPrint(self: BenchData): BenchData
 end
 
 function Print.benchComparePrint(self: BenchCompareData)
-	local str = `Comparing against {
+	local str = `\nComparing against {
 		self.Name
 	}...\n\n`
 	
@@ -146,9 +172,9 @@ function Print.benchComparePrint(self: BenchCompareData)
 		str ..= `Name: {
 			v.Name
 		}\n    Speed: {
-			metricPrint(v.Speed.Percentage, v.Speed.Exact)
+			metricPrint(v.Speed.Exact, v.Speed.Percentage)
 		}\n    Memory: {
-			metricPrint(v.Memory.Percentage, v.Memory.Exact)
+			metricPrint(v.Memory.Exact, v.Memory.Percentage)
 		}`
 	end
 	
