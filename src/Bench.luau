@@ -51,7 +51,7 @@ return function(fn: (...any)->(), ...: any): BenchData
 	
 	local initialTime = os.clock()
 	
-	for i=1, 1_024 do
+	for i=1, 2_048 do
 		local startMemory = gcinfo()
 		local startTime = os.clock()
 		fn(...)
