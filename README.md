@@ -72,19 +72,21 @@ bench(table.insert, tab1, 0)
 --[[
 Name: Table Insert
     Speed: 
-        Median: 9.999e-8
-        Avg:    1.155e-7
-        High:   2.999e-7
-        Max:    1.160e-5
-        Total:  1.182e-4
+        Min:    9.999e-8
+        Low:    9.999e-8
+        Median: 1.000e-7
+        Avg:    1.611e-7
+        High:   4.000e-7
+        Max:    1.119e-5
+        Total:  1.650e-4
         Histogram:
-            31    (0 to 3.749e-8)
-            973   (7.499e-8 to 1.124e-7)
-            8     (1.874e-7 to 2.249e-7)
+            605   (9.999e-8 to 1.374e-7)
+            400   (1.749e-7 to 2.125e-7)
+            7     (2.875e-7 to 3.250e-7)
     Memory: 
-        Avg:    4.892e-3
-        Max:    2.000e0
-        Total:  5.000e0
+        Avg:    3.913e-3
+        Max:    2
+        Total:  4
         Histogram:
             1022  (0 to 0)
 Name: Length Insert
@@ -92,18 +94,17 @@ Name: Length Insert
         Min:    9.999e-8
         Low:    9.999e-8
         Median: 9.999e-8
-        Avg:    1.303e-7
-        High:   3.000e-7
-        Max:    2.599e-6
-        Total:  1.334e-4
+        Avg:    1.343e-7
+        High:   2.000e-7
+        Max:    1.900e-6
+        Total:  1.376e-4
         Histogram:
-            775   (9.999e-8 to 1.249e-7)
-            83    (1.749e-7 to 1.999e-7)
-            153   (1.999e-7 to 2.249e-7)
+            720   (9.999e-8 to 1.124e-7)
+            209   (1.875e-7 to 2.000e-7)
     Memory: 
-        Avg:    3.913e-3
-        Max:    2.000e0
-        Total:  4.000e0
+        Avg:    2.935e-3
+        Max:    2
+        Total:  3
         Histogram:
             1022  (0 to 0)
 
@@ -111,15 +112,14 @@ Comparing against Table Insert...
 
 Name: Length Insert
     Speed: 
-        Min:    +9.999e-8   (+inf%)
-        Low:    +9.999e-8   (+inf%)
-        Avg:    +1.484e-8   (+13%)
-        High:   +0          (+0%)
-        Max:    -9.000e-6   (-78%)
-        Total:  +1.520e-5   (+13%)
+        Median: -0         (-0%)
+        Avg:    -2.675e-8  (-17%)
+        High:   -1.999e-7  (-50%)
+        Max:    -9.299e-6  (-83%)
+        Total:  -2.739e-5  (-17%)
     Memory: 
-        Avg:    -9.784e-4   (-20%)
-        Total:  -1.000e0    (-20%)
+        Avg:    -9.784e-4  (-25%)
+        Total:  -1         (-25%)
 ]]
 ```
 

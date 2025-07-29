@@ -18,6 +18,10 @@ local function precision(x: number, n: number)
 	else
 		local exp = math.log10(math.abs(x)) // 1
 		value = x / math.pow(10, exp)..'e'..exp
+
+		if exp == 0 then
+			return value:split("e")[1]
+		end
 		if value:find("nan") then
 			return "nan"
 		end
