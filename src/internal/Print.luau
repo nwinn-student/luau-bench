@@ -80,6 +80,12 @@ local function metricPrint(data: BenchMetric, other: BenchMetric?)
 	str ..= metricString(data.Maximum, other and other.Maximum, "Max")
 	str ..= metricString(data.Total, other and other.Total, "Total")
 	
+	-- Will occur for memory, and RARELY for speed
+	if str == "" then
+		str = if other then "\n        [No difference]" 
+			else "\n        [Non-existant]"
+	end
+	
 	return str
 end
 local function histPrint(data: BenchMetric)
@@ -104,11 +110,11 @@ end
 function Print.benchPrint(self: BenchData): BenchData
 	local str = `Name: {
 		self.Name
-	}\n    Speed: {
+	}\n    Speed: [seconds]{
 		metricPrint(self.Speed)
 	}\n        Histogram:{
 		histPrint(self.Speed)
-	}\n    Memory: {
+	}\n    Memory: [kB]{
 		metricPrint(self.Memory)
 	}\n        Histogram:{
 		histPrint(self.Memory)
@@ -125,9 +131,9 @@ function Print.benchComparePrint(self: BenchCompareData)
 	for i,v in ipairs(self) do
 		str ..= `Name: {
 			v.Name
-		}\n    Speed: {
+		}\n    Speed: [seconds]{
 			metricPrint(v.Speed.Exact, v.Speed.Percentage)
-		}\n    Memory: {
+		}\n    Memory: [kB]{
 			metricPrint(v.Memory.Exact, v.Memory.Percentage)
 		}`
 	end
