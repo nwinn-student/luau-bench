@@ -147,7 +147,7 @@ function Print.benchComparePrint(self: BenchCompareData)
 			metricPrint(v.Speed.Exact, v.Speed.Percentage)
 		}\n    Memory: [kB]{
 			metricPrint(v.Memory.Exact, v.Memory.Percentage)
-		}`
+		}\n`
 	end
 	
 	print(str)
