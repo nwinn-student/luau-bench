@@ -32,6 +32,16 @@ local function metricExact(first: BenchMetric, second: BenchMetric, new: BenchMe
 	new.High = second.High - first.High
 end
 
+--[[
+	Compares the statistical data between the first benchmark data and 
+		all others.  The comparison is done in two parts, an exact comparison 
+		and a percentage comparison.
+	
+	@param self the benchmark data to compare the rest against
+	@param ... the benchmark data
+	
+	@return the comparison data
+]]--
 return function(self: BenchData, ...: BenchData): BenchCompareData
 	local data: BenchCompareData = {
 		Name = self.Name,

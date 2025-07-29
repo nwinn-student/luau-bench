@@ -10,10 +10,28 @@ type BenchData = Variant.BenchData
 
 Variant = nil
 
+--[[
+	Applies the specified name to the benchmark data.
+	
+	@param self benchmark data
+	@param name the name
+
+	@return the input benchmark data
+]]--
 local function withName(self: BenchData, name: string): BenchData
 	self.Name = name
 	return self
 end
+
+--[[
+	Processes the output and modifies the existing output.
+	
+	@param self benchmark data
+	@param fn the function to process the output with whose return value 
+		becomes the new output value
+
+	@return the input benchmark data
+]]--
 local function updateOutput(self: BenchData, fn: (output: any)->(any)?): BenchData
 	self.Output = fn and fn(self.Output) or nil
 	return self
@@ -29,6 +47,16 @@ local Bench = {
 	}
 }
 
+--[[
+	Runs and collects speed and memory metrics associated with the 
+		provided function.  The data is then partially statistically analyzed, 
+		excluding standard deviation.
+	
+	@param fn the function to benchmark
+	@param ... the arguments to send to the benchmarked function
+	
+	@return benchmark data associated with the specified function
+]]--
 return function(fn: (...any)->(), ...: any): BenchData
 	local data: BenchData = setmetatable({
 		Name = "",

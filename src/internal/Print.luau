@@ -107,8 +107,14 @@ local function histPrint(data: BenchMetric)
 	return str
 end
 
-function Print.benchPrint(self: BenchData): BenchData
+--[[
+	Formats and prints the benchmark data.
 	
+	@param self the input benchmark data
+
+	@return the input benchmark data
+]]--
+function Print.benchPrint(self: BenchData): BenchData
 	local str = `Name: {
 		self.Name
 	}\n    Speed: [seconds]{
@@ -124,6 +130,11 @@ function Print.benchPrint(self: BenchData): BenchData
 	return self
 end
 
+--[[
+	Formats and prints the comparison data.
+	
+	@param self the comparison data
+]]--
 function Print.benchComparePrint(self: BenchCompareData)
 	local str = `\nComparing against {
 		self.Name
