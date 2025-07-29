@@ -14,12 +14,12 @@ local Print = {}
 local function precision(x: number, n: number)
 	local value = nil
 	if math.abs(x) < 1e-9 then
-		value = '0e0'
+		return "0"
 	else
 		local exp = math.log10(math.abs(x)) // 1
 		value = x / math.pow(10, exp)..'e'..exp
 		if value:find("nan") then
-			value = '0e0'
+			return "nan"
 		end
 		if value:find("inf") then
 			return "inf"
@@ -40,14 +40,18 @@ local function precision(x: number, n: number)
 	return first..'e'..temp[2]
 end
 
--- new to replace
 local function metricString(data: number, other: number?, name: string)
 	local str = ""
 	if data ~= 0 and (if other and other ~= 0 then true else not other) then
+		local dataStr = precision(math.abs(data), 4)
 		str = `\n        {name}:{string.rep(" ", 7 - #name)}{
-			if other then math.sign(data) == 1 and "+" or "" else ""
-		}{ precision(data, 4) }{
-			if other then `  ({ math.sign(other) == 1 and "+" or "" }{ math.round(other) }%)`
+			if math.sign(data) == -1 then "-" else if other then "+" else ""
+		}{ dataStr }{
+			if other then `{
+				string.rep(" ", 10 - #dataStr)
+			}({ 
+				math.sign(other) == 1 and "+" or "" 
+			}{ math.round(other) }%)`
 			else ""
 		}`
 	end
