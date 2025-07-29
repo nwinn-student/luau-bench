@@ -33,21 +33,22 @@ bench(table.insert, tab, 0)
 --[[
 Name: Insert
     Speed: 
-        Low:    9.999e-8
         Median: 9.999e-8
-        Avg:    1.071e-7
+        Avg:    1.050e-7
         High:   2.000e-7
-        Max:    2.100e-6
-        Total:  1.096e-4
+        Max:    2.400e-6
+        Total:  1.075e-4
         Histogram:
-            995   (9.999e-8 to 1.124e-7)
-            10    (1.875e-7 to 2.000e-7)
+            31    (0 to 2.500e-8)
+            824   (7.500e-8 to 1.000e-7)
+            136   (1.000e-7 to 1.250e-7)
+            13    (1.750e-7 to 2.000e-7)
     Memory: 
         Avg:    2.935e-3
-        Max:    2.000e0
-        Total:  3.000e0
+        Max:    2
+        Total:  3
         Histogram:
-            1022  (0.000e0 to 0.000e0)
+            1022  (0 to 0)
 ]]
 ```
 
@@ -72,21 +73,20 @@ bench(table.insert, tab1, 0)
 --[[
 Name: Table Insert
     Speed: 
-        Min:    9.999e-8
-        Low:    9.999e-8
-        Median: 1.000e-7
-        Avg:    1.611e-7
-        High:   4.000e-7
-        Max:    1.119e-5
-        Total:  1.650e-4
+        Median: 9.999e-8
+        Avg:    1.050e-7
+        High:   2.000e-7
+        Max:    2.400e-6
+        Total:  1.075e-4
         Histogram:
-            605   (9.999e-8 to 1.374e-7)
-            400   (1.749e-7 to 2.125e-7)
-            7     (2.875e-7 to 3.250e-7)
+            31    (0 to 2.500e-8)
+            824   (7.500e-8 to 1.000e-7)
+            136   (1.000e-7 to 1.250e-7)
+            13    (1.750e-7 to 2.000e-7)
     Memory: 
-        Avg:    3.913e-3
+        Avg:    2.935e-3
         Max:    2
-        Total:  4
+        Total:  3
         Histogram:
             1022  (0 to 0)
 Name: Length Insert
@@ -96,15 +96,15 @@ Name: Length Insert
         Median: 9.999e-8
         Avg:    1.343e-7
         High:   2.000e-7
-        Max:    1.900e-6
-        Total:  1.376e-4
+        Max:    6.199e-6
+        Total:  1.375e-4
         Histogram:
-            720   (9.999e-8 to 1.124e-7)
-            209   (1.875e-7 to 2.000e-7)
+            761   (9.999e-8 to 1.124e-7)
+            158   (1.875e-7 to 2.000e-7)
     Memory: 
-        Avg:    2.935e-3
+        Avg:    3.913e-3
         Max:    2
-        Total:  3
+        Total:  4
         Histogram:
             1022  (0 to 0)
 
@@ -112,14 +112,14 @@ Comparing against Table Insert...
 
 Name: Length Insert
     Speed: 
-        Median: -0         (-0%)
-        Avg:    -2.675e-8  (-17%)
-        High:   -1.999e-7  (-50%)
-        Max:    -9.299e-6  (-83%)
-        Total:  -2.739e-5  (-17%)
+        Min:    +9.999e-8  (+inf%)
+        Low:    +9.999e-8  (+inf%)
+        Avg:    +2.929e-8  (+27.9%)
+        Max:    +3.799e-6  (+158.3%)
+        Total:  +3.000e-5  (+27.9%)
     Memory: 
-        Avg:    -9.784e-4  (-25%)
-        Total:  -1         (-25%)
+        Avg:    +9.784e-4  (+33.3%)
+        Total:  +1         (+33.3%)
 ]]
 ```
 
@@ -140,32 +140,32 @@ bench(bench, function() end)
 --[[
 Name: Bench
     Speed: 
-        Min:    4.117e-4
-        Low:    4.209e-4
-        Median: 5.496e-4
-        Avg:    5.607e-4
-        High:   7.395e-4
-        Max:    1.434e-3
-        Total:  5.742e-1
+        Min:    4.086e-4
+        Low:    4.198e-4
+        Median: 5.457e-4
+        Avg:    5.539e-4
+        High:   7.706e-4
+        Max:    1.585e-3
+        Total:  5.672e-1
         Histogram:
-            19    (4.209e-4 to 4.607e-4)
-            1     (4.607e-4 to 5.005e-4)
-            214   (5.005e-4 to 5.403e-4)
-            603   (5.403e-4 to 5.802e-4)
-            117   (5.802e-4 to 6.200e-4)
-            17    (6.200e-4 to 6.598e-4)
-            17    (6.598e-4 to 6.996e-4)
-            15    (6.996e-4 to 7.395e-4)
+            89    (4.198e-4 to 4.637e-4)
+            12    (4.637e-4 to 5.075e-4)
+            506   (5.075e-4 to 5.514e-4)
+            281   (5.514e-4 to 5.952e-4)
+            60    (5.952e-4 to 6.391e-4)
+            22    (6.391e-4 to 6.829e-4)
+            23    (6.829e-4 to 7.268e-4)
+            10    (7.268e-4 to 7.706e-4)
     Memory: 
-        Min:    3.300e1
-        Low:    3.300e1
-        Median: 3.400e1
-        Avg:    3.389e1
-        High:   3.400e1
-        Max:    3.400e1
-        Total:  3.436e4
+        Min:    33
+        Low:    33
+        Median: 34
+        Avg:    33.89
+        High:   34
+        Max:    34
+        Total:  34295
         Histogram:
-            110   (3.300e1 to 3.312e1)
+            113   (33 to 33.13)
 ]]
 ```
 

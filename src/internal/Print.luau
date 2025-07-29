@@ -19,8 +19,9 @@ local function precision(x: number, n: number)
 		local exp = math.log10(math.abs(x)) // 1
 		value = x / math.pow(10, exp)..'e'..exp
 
-		if exp == 0 then
-			return value:split("e")[1]
+		if exp >= 0 then
+			-- ensure x is rounded to correct value
+			return math.round(x * math.pow(10, exp+1)) / math.pow(10, exp+1)..""
 		end
 		if value:find("nan") then
 			return "nan"
@@ -55,7 +56,7 @@ local function metricString(data: number, other: number?, name: string)
 				string.rep(" ", 10 - #dataStr)
 			}({ 
 				math.sign(other) == 1 and "+" or "" 
-			}{ math.round(other) }%)`
+			}{ math.round(other * 10) / 10 }%)`
 			else ""
 		}`
 	end
