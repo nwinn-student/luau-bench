@@ -27,26 +27,24 @@ A user needs to compare how different versions of a function perform, they will 
 ```luau
 local tab = {}
 bench(table.insert, tab, 0)
-	withName("Insert"):print()
+	:withName("Insert"):print()
 
 --Name: Insert
---	Speed: 
---		Min:	9.999e-8
---		Low:	9.999e-8
---		Median:	1.000e-7
---		Avg:	1.442e-7
---		High:	2.000e-7
---		Max:	8.590e-5
---		Total:	1.442e-3
---		Histogram:
---			8175	(9.999e-8 to 1.124e-7)
---			778	(1.875e-7 to 2.000e-7)
---	Memory: 
---		Avg:	6.401e-3
---		Max:	3.200e1
---		Total:	6.400e1
---		Histogram:
---			9998	(0.000e0 to 0.000e0)
+--    Speed: 
+--        Median: 9.999e-8
+--        Avg:    1.074e-7
+--        High:   1.999e-7
+--        Max:    2.519e-5
+--        Total:  2.200e-4
+--        Histogram:
+--            179   (0.000e0 to 2.499e-8)
+--            1838  (9.999e-8 to 1.249e-7)
+--    Memory: 
+--        Avg:    3.421e-3
+--        Max:    4.000e0
+--        Total:  7.000e0
+--        Histogram:
+--            2046  (0.000e0 to 0.000e0)
 ```
 
 ## Performance
@@ -63,33 +61,33 @@ bench(bench, function() end)
 	:withName("Bench"):print()
 
 --Name: Bench
---	Speed: 
---		Min:   	1.713e-3
---		Low:   	1.768e-3
---		Median:	2.281e-3
---		Avg:   	2.276e-3
---		High:  	3.150e-3
---		Max:   	5.351e-3
---		Total: 	5.000e0
---		Histogram:
---			230   	(1.768e-3 to 1.941e-3)
---			30    	(1.941e-3 to 2.113e-3)
---			929   	(2.113e-3 to 2.286e-3)
---			805   	(2.286e-3 to 2.459e-3)
---			86    	(2.459e-3 to 2.632e-3)
---			24    	(2.632e-3 to 2.804e-3)
---			17    	(2.804e-3 to 2.977e-3)
---			32    	(2.977e-3 to 3.150e-3)
---	Memory: 
---		Min:   	1.290e2
---		Low:   	1.290e2
---		Median:	1.300e2
---		Avg:   	1.298e2
---		High:  	1.300e2
---		Max:   	1.300e2
---		Total: 	2.792e5
---		Histogram:
---			232   	(1.290e2 to 1.291e2)
+--    Speed: 
+--        Min:    1.728e-3
+--        Low:    1.762e-3
+--        Median: 2.245e-3
+--        Avg:    2.244e-3
+--        High:   3.072e-3
+--        Max:    4.542e-3
+--        Total:  5.000e0
+--        Histogram:
+--            170   (1.762e-3 to 1.926e-3)
+--            32    (1.926e-3 to 2.090e-3)
+--            995   (2.090e-3 to 2.253e-3)
+--            825   (2.253e-3 to 2.417e-3)
+--            121   (2.417e-3 to 2.581e-3)
+--            8     (2.581e-3 to 2.744e-3)
+--            16    (2.744e-3 to 2.908e-3)
+--            16    (2.908e-3 to 3.072e-3)
+--    Memory: 
+--        Min:    1.290e2
+--        Low:    1.290e2
+--        Median: 1.300e2
+--        Avg:    1.298e2
+--        High:   1.300e2
+--        Max:    1.300e2
+--        Total:  2.831e5
+--        Histogram:
+--            230   (1.290e2 to 1.291e2)
 ```
 
 ## Design
