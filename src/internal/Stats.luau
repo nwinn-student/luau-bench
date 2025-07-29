@@ -26,7 +26,7 @@ function Stats.metrics(data: BenchMetric)
 	data.Average = data.Total / lenData
 	data.Minimum = dataTab[1]
 	data.Maximum = dataTab[lenData]
-	data.Low = dataTab[(0.01 * lenData) // 1]
+	data.Low = dataTab[(0.01 * lenData) // 1] or dataTab[1]
 	data.Median = dataTab[(0.5 * lenData) // 1]
 	data.High = dataTab[(0.99 * lenData) // 1]
 end
