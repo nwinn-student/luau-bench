@@ -71,8 +71,6 @@ return function(fn: (...any)->(), ...: any): BenchData
 		end
 	end
 	
-	-- Lengths
-	local lenSpeed = #speed
 	local lenMemory = #memory
 	
 	-- Sort data
@@ -81,8 +79,8 @@ return function(fn: (...any)->(), ...: any): BenchData
 	
 	-- All negative memory values will be removed
 	local lastNegPos = 0
-	for i = 1, lenMemory do
-		if memory[i] >= 0 then
+	for i,v in memory do
+		if v >= 0 then
 			lastNegPos = i
 			break
 		end
@@ -94,8 +92,7 @@ return function(fn: (...any)->(), ...: any): BenchData
 	for i = lenMemory - lastNegPos, lenMemory do
 		memory[i] = nil
 	end
-	lenMemory = #memory
-		
+	
 	-- Standard deviation is NOT included
 	Stats.metrics(data.Speed)
 	Stats.metrics(data.Memory)
