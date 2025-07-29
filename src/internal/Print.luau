@@ -42,9 +42,16 @@ end
 
 -- new to replace
 local function metricString(data: number, other: number?, name: string)
+	local str = ""
 	if data ~= 0 and (if other and other ~= 0 then true else not other) then
-		
+		str = `\n        {name}:{string.rep(" ", 7 - #name)}{
+			if other then math.sign(data) == 1 and "+" or "" else ""
+		}{ precision(data, 4) }{
+			if other then `  ({ math.sign(other) == 1 and "+" or "" }{ math.round(other) }%)`
+			else ""
+		}`
 	end
+	return str
 end
 --[[
 	Regular:
@@ -56,76 +63,14 @@ local function metricPrint(data: BenchMetric, other: BenchMetric?)
 	-- If any aspect is 0 we should NOT display it
 	local str = ""
 	
-	if data.Minimum ~= 0 
-		and (if other and other.Minimum ~= 0 then true else not other)
-	then
-		str ..= `\n        Min:    {
-			if other then math.sign(data.Minimum) == 1 and "+" or "" else ""
-		}{ precision(data.Minimum, 4) }{
-			if other then `  ({ math.sign(other.Minimum) == 1 and "+" or "" }{ math.round(other.Minimum) }%)`
-			else ""
-		}`
-	end
-	if data.Low ~= 0 
-		and (if other and other.Low ~= 0 then true else not other)
-	then
-		str ..= `\n        Low:    {
-			if other then math.sign(data.Low) == 1 and "+" or "" else ""
-		}{ precision(data.Low, 4) }{
-			if other then `  ({ math.sign(other.Low) == 1 and "+" or "" }{ math.round(other.Low) }%)`
-			else ""
-		}`
-	end
-	if data.Median ~= 0 
-		and (if other and other.Median ~= 0 then true else not other)
-	then
-		str ..= `\n        Median: {
-			if other then math.sign(data.Median) == 1 and "+" or "" else ""
-		}{ precision(data.Median, 4) }{
-			if other then `  ({ math.sign(other.Median) == 1 and "+" or "" }{ math.round(other.Median) }%)`
-			else ""
-		}`
-	end
-	if data.Average ~= 0 
-		and (if other and other.Average ~= 0 then true else not other)
-	then
-		str ..= `\n        Avg:    {
-			if other then math.sign(data.Average) == 1 and "+" or "" else ""
-		}{ precision(data.Average, 4) }{
-			if other then `  ({ math.sign(other.Average) == 1 and "+" or "" }{ math.round(other.Average) }%)`
-			else ""
-		}`
-	end
-	if data.High ~= 0 
-		and (if other and other.High ~= 0 then true else not other)
-	then
-		str ..= `\n        High:   {
-			if other then math.sign(data.High) == 1 and "+" or "" else ""
-		}{ precision(data.High, 4) }{
-			if other then `  ({ math.sign(other.High) == 1 and "+" or "" }{ math.round(other.High) }%)`
-			else ""
-		}`
-	end
-	if data.Maximum ~= 0 
-		and (if other and other.Maximum ~= 0 then true else not other)
-	then
-		str ..= `\n        Max:    {
-			if other then math.sign(data.Maximum) == 1 and "+" or "" else ""
-		}{ precision(data.Maximum, 4) }{
-			if other then `  ({ math.sign(other.Maximum) == 1 and "+" or "" }{ math.round(other.Maximum) }%)`
-			else ""
-		}`
-	end
-	if data.Total ~= 0 
-		and (if other and other.Total ~= 0 then true else not other)
-	then
-		str ..= `\n        Total:  {
-			if other then math.sign(data.Total) == 1 and "+" or "" else ""
-		}{ precision(data.Total, 4) }{
-			if other then `  ({ math.sign(other.Total) == 1 and "+" or ""}{ math.round(other.Total) }%)`
-			else ""
-		}`
-	end
+	str ..= metricString(data.Minimum, other and other.Minimum, "Min")
+	str ..= metricString(data.Low, other and other.Low, "Low")
+	str ..= metricString(data.Median, other and other.Median, "Median")
+	str ..= metricString(data.Average, other and other.Average, "Avg")
+	str ..= metricString(data.High, other and other.High, "High")
+	str ..= metricString(data.Maximum, other and other.Maximum, "Max")
+	str ..= metricString(data.Total, other and other.Total, "Total")
+	
 	return str
 end
 local function histPrint(data: BenchMetric)
