@@ -25,28 +25,103 @@ A user needs to compare how different versions of a function perform, they will 
 
 ## Example
 ```luau
+-- General benchmarking case
 local tab = {}
 bench(table.insert, tab, 0)
 	:withName("Insert"):print()
 
---Name: Insert
---    Speed: 
---        Low:    9.999e-8
---        Median: 9.999e-8
---        Avg:    1.071e-7
---        High:   2.000e-7
---        Max:    2.100e-6
---        Total:  1.096e-4
---        Histogram:
---            995   (9.999e-8 to 1.124e-7)
---            10    (1.875e-7 to 2.000e-7)
---    Memory: 
---        Avg:    2.935e-3
---        Max:    2.000e0
---        Total:  3.000e0
---        Histogram:
---            1022  (0.000e0 to 0.000e0)
+--[[
+Name: Insert
+    Speed: 
+        Low:    9.999e-8
+        Median: 9.999e-8
+        Avg:    1.071e-7
+        High:   2.000e-7
+        Max:    2.100e-6
+        Total:  1.096e-4
+        Histogram:
+            995   (9.999e-8 to 1.124e-7)
+            10    (1.875e-7 to 2.000e-7)
+    Memory: 
+        Avg:    2.935e-3
+        Max:    2.000e0
+        Total:  3.000e0
+        Histogram:
+            1022  (0.000e0 to 0.000e0)
+]]
 ```
+
+```luau
+-- Comparison case
+local tab1 = {}
+local tab2 = {}
+
+function insert(t: {}, value: number)
+	t[#t + 1] = value
+end
+
+bench(table.insert, tab1, 0)
+	:withName("Table Insert")
+	:print()
+	:compare(
+		bench(insert, tab2, 0)
+			:withName("Length Insert")
+			:print()
+	):print()
+
+--[[
+Name: Table Insert
+    Speed: 
+        Median: 9.999e-8
+        Avg:    1.008e-7
+        High:   2.000e-7
+        Max:    2.099e-6
+        Total:  1.032e-4
+        Histogram:
+            76    (0.000e0 to 2.500e-8)
+            783   (7.500e-8 to 1.000e-7)
+            145   (1.000e-7 to 1.250e-7)
+            5     (1.750e-7 to 2.000e-7)
+    Memory: 
+        Avg:    4.892e-3
+        Max:    2.000e0
+        Total:  5.000e0
+        Histogram:
+            1022  (0.000e0 to 0.000e0)
+Name: Length Insert
+    Speed: 
+        Min:    9.999e-8
+        Low:    9.999e-8
+        Median: 9.999e-8
+        Avg:    1.428e-7
+        High:   2.999e-7
+        Max:    2.300e-6
+        Total:  1.462e-4
+        Histogram:
+            644   (9.999e-8 to 1.249e-7)
+            367   (1.999e-7 to 2.249e-7)
+    Memory: 
+        Avg:    3.913e-3
+        Max:    2.000e0
+        Total:  4.000e0
+        Histogram:
+            1022  (0.000e0 to 0.000e0)
+Comparing against Table Insert...
+
+Name: Length Insert
+    Speed: 
+        Min:    0.000e0%  9.999e-8
+        Low:    0.000e0%  9.999e-8
+        Avg:    4.162e1%  4.199e-8
+        High:   4.999e1%  9.999e-8
+        Max:    9.523e0%  2.000e-7
+        Total:  4.162e1%  4.299e-5
+    Memory: 
+        Avg:    -2.00e1%  -9.78e-4
+        Total:  -2.00e1%  -1.00e0
+]]
+```
+
 
 ## Performance
 
@@ -61,34 +136,36 @@ The speed / memory usage of this module matters not, however here are metrics ab
 bench(bench, function() end)
 	:withName("Bench"):print()
 
---Name: Bench
---    Speed: 
---        Min:    4.117e-4
---        Low:    4.209e-4
---        Median: 5.496e-4
---        Avg:    5.607e-4
---        High:   7.395e-4
---        Max:    1.434e-3
---        Total:  5.742e-1
---        Histogram:
---            19    (4.209e-4 to 4.607e-4)
---            1     (4.607e-4 to 5.005e-4)
---            214   (5.005e-4 to 5.403e-4)
---            603   (5.403e-4 to 5.802e-4)
---            117   (5.802e-4 to 6.200e-4)
---            17    (6.200e-4 to 6.598e-4)
---            17    (6.598e-4 to 6.996e-4)
---            15    (6.996e-4 to 7.395e-4)
---    Memory: 
---        Min:    3.300e1
---        Low:    3.300e1
---        Median: 3.400e1
---        Avg:    3.389e1
---        High:   3.400e1
---        Max:    3.400e1
---        Total:  3.436e4
---        Histogram:
---            110   (3.300e1 to 3.312e1)
+--[[
+Name: Bench
+    Speed: 
+        Min:    4.117e-4
+        Low:    4.209e-4
+        Median: 5.496e-4
+        Avg:    5.607e-4
+        High:   7.395e-4
+        Max:    1.434e-3
+        Total:  5.742e-1
+        Histogram:
+            19    (4.209e-4 to 4.607e-4)
+            1     (4.607e-4 to 5.005e-4)
+            214   (5.005e-4 to 5.403e-4)
+            603   (5.403e-4 to 5.802e-4)
+            117   (5.802e-4 to 6.200e-4)
+            17    (6.200e-4 to 6.598e-4)
+            17    (6.598e-4 to 6.996e-4)
+            15    (6.996e-4 to 7.395e-4)
+    Memory: 
+        Min:    3.300e1
+        Low:    3.300e1
+        Median: 3.400e1
+        Avg:    3.389e1
+        High:   3.400e1
+        Max:    3.400e1
+        Total:  3.436e4
+        Histogram:
+            110   (3.300e1 to 3.312e1)
+]]
 ```
 
 ## Design
