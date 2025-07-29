@@ -108,6 +108,7 @@ local function histPrint(data: BenchMetric)
 end
 
 function Print.benchPrint(self: BenchData): BenchData
+	
 	local str = `Name: {
 		self.Name
 	}\n    Speed: [seconds]{
@@ -118,7 +119,7 @@ function Print.benchPrint(self: BenchData): BenchData
 		metricPrint(self.Memory)
 	}\n        Histogram:{
 		histPrint(self.Memory)
-	}`
+	}{ self.Output and "\n    " .. tostring(self.Output) or "" }`
 	print(str)
 	return self
 end

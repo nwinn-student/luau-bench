@@ -35,12 +35,15 @@ export type BenchCompareData = {
 
 export type BenchData = {
 	Name: string,
+	Output: any, -- useful if the user needs to verify the output OR they want to print it
 	Speed: BenchMetric,
 	Memory: BenchMetric,
 
 	print: (self: BenchData)-> BenchData,
 	compare: (self: BenchData, ...BenchData) -> BenchCompareData,
-	withName: (self: BenchData, name: string) -> BenchData
+	withName: (self: BenchData, name: string) -> BenchData,
+	-- mainly used to prepare the value for printing (we just print the value itself after \n)
+	updateOutput(self: BenchData, fn: (output: any)->(any)?) -> BenchData
 }
 
 return {}

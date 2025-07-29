@@ -34,14 +34,16 @@ bench(table.insert, tab, 0)
 --[[
 Name: Insert
     Speed: [seconds]
-        Median: 9.999e-8
-        Avg:    1.095e-7
-        High:   1.000e-7
-        Max:    2.150e-5
-        Total:  2.244e-4
+        Min:    9.999e-8
+        Low:    9.999e-8
+        Median: 1.000e-7
+        Avg:    1.117e-7
+        High:   2.000e-7
+        Max:    5.500e-6
+        Total:  2.288e-4
         Histogram:
-            116   (0 to 1.250e-8)
-            1912  (8.750e-8 to 1.000e-7)
+            1959  (9.999e-8 to 1.124e-7)
+            76    (1.875e-7 to 2.000e-7)
     Memory: [kB]
         Avg:    4.398e-3
         Max:    4
@@ -72,14 +74,16 @@ bench(table.insert, tab1, 0)
 --[[
 Name: Table Insert
     Speed: [seconds]
-        Median: 9.999e-8
-        Avg:    1.095e-7
-        High:   1.000e-7
-        Max:    2.150e-5
-        Total:  2.244e-4
+        Min:    9.999e-8
+        Low:    9.999e-8
+        Median: 1.000e-7
+        Avg:    1.117e-7
+        High:   2.000e-7
+        Max:    5.500e-6
+        Total:  2.288e-4
         Histogram:
-            116   (0 to 1.250e-8)
-            1912  (8.750e-8 to 1.000e-7)
+            1959  (9.999e-8 to 1.124e-7)
+            76    (1.875e-7 to 2.000e-7)
     Memory: [kB]
         Avg:    4.398e-3
         Max:    4
@@ -90,18 +94,18 @@ Name: Length Insert
     Speed: [seconds]
         Min:    9.999e-8
         Low:    9.999e-8
-        Median: 9.999e-8
-        Avg:    1.668e-7
+        Median: 1.000e-7
+        Avg:    1.435e-7
         High:   2.000e-7
-        Max:    3.530e-5
-        Total:  3.416e-4
+        Max:    8.500e-6
+        Total:  2.938e-4
         Histogram:
-            1524  (9.999e-8 to 1.124e-7)
-            509   (1.875e-7 to 2.000e-7)
+            1377  (9.999e-8 to 1.124e-7)
+            658   (1.875e-7 to 2.000e-7)
     Memory: [kB]
-        Avg:    3.421e-3
+        Avg:    3.910e-3
         Max:    4
-        Total:  7
+        Total:  8
         Histogram:
             2046  (0 to 0)
 
@@ -109,15 +113,12 @@ Comparing against Table Insert...
 
 Name: Length Insert
     Speed: [seconds]
-        Min:    +9.999e-8  (+inf%)
-        Low:    +9.999e-8  (+inf%)
-        Avg:    +5.727e-8  (+52.3%)
-        High:   +9.999e-8  (+100%)
-        Max:    +1.380e-5  (+64.2%)
-        Total:  +1.172e-4  (+52.3%)
+        Avg:    +3.178e-8  (+28.5%)
+        Max:    +3.000e-6  (+54.5%)
+        Total:  +6.509e-5  (+28.5%)
     Memory: [kB]
-        Avg:    -9.775e-4  (-22.2%)
-        Total:  -2         (-22.2%)
+        Avg:    -4.887e-4  (-11.1%)
+        Total:  -1         (-11.1%)
 ]]
 ```
 
@@ -133,38 +134,41 @@ The speed / memory usage of this module matters not, however here are metrics ab
 
 ```luau
 bench(bench, function() end)
-	:withName("Bench"):print()
+	:withName("Bench")
+	-- removes the benchData table from the output
+	:updateOutput()
+	:print()
 
 --[[
 Name: Bench
     Speed: [seconds]
-        Min:    8.544e-4
-        Low:    8.716e-4
-        Median: 1.130e-3
-        Avg:    1.148e-3
-        High:   1.733e-3
-        Max:    3.034e-3
-        Total:  2.4
+        Min:    8.615e-4
+        Low:    8.712e-4
+        Median: 1.160e-3
+        Avg:    1.121e-3
+        High:   1.608e-3
+        Max:    2.345e-3
+        Total:  2.3
         Histogram:
-            232   (8.716e-4 to 9.792e-4)
-            88    (9.792e-4 to 1.086e-3)
-            1327  (1.086e-3 to 1.194e-3)
-            175   (1.194e-3 to 1.302e-3)
-            72    (1.302e-3 to 1.410e-3)
-            53    (1.410e-3 to 1.517e-3)
-            35    (1.517e-3 to 1.625e-3)
-            37    (1.625e-3 to 1.733e-3)
+            485   (8.712e-4 to 9.635e-4)
+            46    (9.635e-4 to 1.055e-3)
+            194   (1.055e-3 to 1.147e-3)
+            1102  (1.147e-3 to 1.240e-3)
+            119   (1.240e-3 to 1.332e-3)
+            42    (1.332e-3 to 1.424e-3)
+            7     (1.424e-3 to 1.516e-3)
+            16    (1.516e-3 to 1.608e-3)
     Memory: [kB]
         Min:    65
         Low:    65
         Median: 66
-        Avg:    65.89
+        Avg:    65.77
         High:   66
         Max:    66
-        Total:  132435
+        Total:  133240
         Histogram:
-            225   (65 to 65.13)
-            1785  (65.88 to 66)
+            476   (65 to 65.13)
+            1550  (65.88 to 66)
 ]]
 ```
 

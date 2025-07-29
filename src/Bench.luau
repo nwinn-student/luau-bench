@@ -14,10 +14,25 @@ local function withName(self: BenchData, name: string): BenchData
 	self.Name = name
 	return self
 end
+local function updateOutput(self: BenchData, fn: (output: any)->(any)?): BenchData
+	self.Output = fn and fn(self.Output) or nil
+	return self
+end
+
+-- Saves memory if bench is used alot
+local Bench = {
+	__index = {
+		print = benchPrint,
+		compare = benchCompare,
+		withName = withName,
+		updateOutput = updateOutput,
+	}
+}
 
 return function(fn: (...any)->(), ...: any): BenchData
-	local data: BenchData = {
+	local data: BenchData = setmetatable({
 		Name = "",
+		Output = nil,
 		Speed = {
 			Data = {},
 			Total = 0, Average = 0,
@@ -40,11 +55,7 @@ return function(fn: (...any)->(), ...: any): BenchData
 				Range = 0
 			}
 		},
-		
-		print = benchPrint,
-		compare = benchCompare,
-		withName = withName,
-	}
+	}, Bench)
 	
 	local speed = data.Speed.Data
 	local memory = data.Memory.Data
@@ -54,11 +65,14 @@ return function(fn: (...any)->(), ...: any): BenchData
 	for i=1, 2_048 do
 		local startMemory = gcinfo()
 		local startTime = os.clock()
-		fn(...)
+		local output = fn(...) -- ensure if there is an output, Luau doesn't somehow optimize it away
 		local endTime = os.clock() - startTime
 		memory[i] = gcinfo() - startMemory
 		speed[i] = endTime
-				
+		
+		if i == 1 then
+			data.Output = output
+		end
 		-- Amount must be 30+ for statistical significance
 		if i < 30 then
 			continue
