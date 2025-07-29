@@ -37,16 +37,6 @@ local function updateOutput(self: BenchData, fn: (output: any)->(any)?): BenchDa
 	return self
 end
 
--- Saves memory if bench is used alot
-local Bench = {
-	__index = {
-		print = benchPrint,
-		compare = benchCompare,
-		withName = withName,
-		updateOutput = updateOutput,
-	}
-}
-
 --[[
 	Runs and collects speed and memory metrics associated with the 
 		provided function.  The data is then partially statistically analyzed, 
@@ -57,8 +47,8 @@ local Bench = {
 	
 	@return benchmark data associated with the specified function
 ]]--
-return function(fn: (...any)->(), ...: any): BenchData
-	local data: BenchData = setmetatable({
+return function(fn: (...any)->(any), ...: any): BenchData
+	local data: BenchData = {
 		Name = "",
 		Output = nil,
 		Speed = {
@@ -83,7 +73,11 @@ return function(fn: (...any)->(), ...: any): BenchData
 				Range = 0
 			}
 		},
-	}, Bench)
+		print = benchPrint,
+		compare = benchCompare,
+		withName = withName,
+		updateOutput = updateOutput
+	}
 	
 	local speed = data.Speed.Data
 	local memory = data.Memory.Data
