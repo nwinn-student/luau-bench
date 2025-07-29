@@ -52,8 +52,12 @@ function Stats.hist(data: BenchMetric)
 		if box < 0 then
 			continue
 		end
-		if box >= boxCount then
-			--hist[box] += 1
+		if box > boxCount then
+			continue
+		end
+		-- values matching High
+		if box == boxCount then
+			hist[box] += 1
 			continue
 		end
 		hist[box+1] += 1
