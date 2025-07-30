@@ -46,21 +46,20 @@ local function precision(x: number, n: number)
 end
 
 local function metricString(data: number, other: number?, name: string)
-	local str = ""
-	if data ~= 0 and (if other and other ~= 0 then true else not other) then
-		local dataStr = precision(math.abs(data), 4)
-		str = `\n        {name}:{string.rep(" ", 7 - #name)}{
-			if math.sign(data) == -1 then "-" else if other then "+" else ""
-		}{ dataStr }{
-			if other then `{
-				string.rep(" ", 10 - #dataStr)
-			}({ 
-				math.sign(other) == 1 and "+" or "" 
-			}{ math.round(other * 10) / 10 }%)`
-			else ""
-		}`
+	if data == 0 or other and other == 0 then
+		return ""
 	end
-	return str
+	local dataStr = precision(math.abs(data), 4)
+	return `\n        {name}:{string.rep(" ", 7 - #name)}{
+		if math.sign(data) == -1 then "-" else if other then "+" else ""
+	}{ dataStr }{
+		if other then `{
+			string.rep(" ", 10 - #dataStr)
+		}({ 
+			math.sign(other) == 1 and "+" or "" 
+		}{ math.round(other * 10) / 10 }%)`
+		else ""
+	}`
 end
 --[[
 	Regular:
