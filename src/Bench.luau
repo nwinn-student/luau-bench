@@ -122,12 +122,15 @@ return function(fn: (...any)->(any), ...: any): BenchData
 		end
 	end
 	
-	table.move(memory, lastNegPos, lenMemory, 1, memory)
-	
-	-- remove copies
-	for i = lenMemory - lastNegPos, lenMemory do
-		memory[i] = nil
+	if lastNegPos ~= 1 then
+		table.move(memory, lastNegPos, lenMemory, 1, memory)
+		
+		-- remove copies
+		for i = lenMemory - lastNegPos, lenMemory do
+			memory[i] = nil
+		end
 	end
+	
 	
 	-- Standard deviation is NOT included
 	Stats.metrics(data.Speed)
