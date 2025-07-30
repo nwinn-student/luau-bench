@@ -89,19 +89,20 @@ return function(fn: (...any)->(any), ...: any): BenchData
 		local startTime = os.clock()
 		local output = fn(...) -- ensure if there is an output, Luau doesn't somehow optimize it away
 		local endTime = os.clock() - startTime
+		
 		memory[i] = gcinfo() - startMemory
 		speed[i] = endTime
 		
-		if i == 1 then
-			data.Output = output
-		end
 		-- Amount must be 30+ for statistical significance
 		if i < 30 then
+			if i == 1 then
+				data.Output = output
+			end
 			continue
 		end
 		
 		-- Total time elapsed should be less than 5 seconds
-		if os.clock() - initialTime > 5.0 then
+		if startTime - initialTime + endTime > 5.0 then
 			print(`TESTED: {i} times and took {os.clock() - initialTime} seconds`)
 			break
 		end
