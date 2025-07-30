@@ -104,32 +104,33 @@ bench(bench, function() end)
 --[[
 Name: Bench
     Speed: [seconds]
-        Min:    8.446e-4
-        Low:    8.501e-4
-        Median: 1.119e-3
-        Avg:    1.097e-3
-        High:   1.404e-3
-        Max:    1.828e-3
-        Total:  2.2
+        Min:    9.215e-4
+        Low:    9.302e-4
+        Median: 1.166e-3
+        Avg:    1.131e-3
+        High:   1.348e-3
+        Max:    1.969e-3
+        Total:  2.3
         Histogram:
-            286   (8.501e-4 to 9.194e-4)
-            20    (9.194e-4 to 9.887e-4)
-            13    (9.887e-4 to 1.058e-3)
-            939   (1.058e-3 to 1.127e-3)
-            615   (1.127e-3 to 1.196e-3)
-            87    (1.196e-3 to 1.265e-3)
-            26    (1.265e-3 to 1.335e-3)
-            36    (1.335e-3 to 1.404e-3)
+            396   (9.302e-4 to 9.825e-4)
+            57    (9.825e-4 to 1.034e-3)
+            25    (1.034e-3 to 1.087e-3)
+            51    (1.087e-3 to 1.139e-3)
+            1095  (1.139e-3 to 1.191e-3)
+            308   (1.191e-3 to 1.243e-3)
+            60    (1.243e-3 to 1.296e-3)
+            22    (1.296e-3 to 1.348e-3)
     Memory: [kB]
-        Min:    65
-        Low:    66
+        Min:    63
+        Low:    65
         Median: 66
-        Avg:    66
+        Avg:    65.81
         High:   66
         Max:    66
-        Total:  112128
+        Total:  112198
         Histogram:
-            1699  (66 to 66)
+            329   (65 to 65.13)
+            1375  (65.88 to 66)
 ]]
 ```
 
