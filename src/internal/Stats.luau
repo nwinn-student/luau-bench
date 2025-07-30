@@ -24,7 +24,9 @@ function Stats.metrics(data: BenchMetric)
 	
 	data.Minimum = dataTab[1]
 	data.Maximum = dataTab[lenData]
-	data.Low = dataTab[(0.01 * lenData) // 1] or dataTab[1]
+	
+	local lowIndex = (0.01 * lenData) // 1
+	data.Low = dataTab[lowIndex ~= 0 and lowIndex or 1]
 	data.Median = dataTab[(0.5 * lenData) // 1]
 	data.High = dataTab[(0.99 * lenData) // 1]
 end
@@ -40,35 +42,54 @@ function Stats.hist(data: BenchMetric)
 	local histRange = data.Histogram.Range
 	
 	local total = 0
+	local len = #data.Data
 	
 	if histRange == 0 then
-		hist[1] = #data.Data
+		hist[1] = len
 		data.Total = sum(data.Data)
-		data.Average = data.Total / #data.Data
+		data.Average = data.Total / len
 		return
 	end
+	
+	local cache = 0
+	local cacheBox = 1
 	
 	for i,v in data.Data do
 		total += v
 		-- place each value in a box
 		local box = (v - histLow) // histRange
-		if box < 0 then
+		
+		if box < 0 or box >= boxCount then
+			-- values matching High, few get in here, so this can be slower
+			if box == boxCount then
+				if cacheBox == box then
+					cache += 1
+				else
+					hist[cacheBox] = cache
+					cache = 1
+					cacheBox = box
+				end
+			end
+			
 			continue
 		end
-		if box > boxCount then
-			continue
+		
+		if cacheBox == box + 1 then
+			cache += 1
+		else
+			hist[cacheBox] = cache
+			cache = 1
+			cacheBox = box + 1
 		end
-		-- values matching High
-		if box == boxCount then
-			hist[box] += 1
-			continue
-		end
-		hist[box+1] += 1
 	end
 	
+	if hist[cacheBox] == 0 then
+		hist[cacheBox] = cache
+	end
+		
 	-- maybe faster?
 	data.Total = total
-	data.Average = total / #data.Data
+	data.Average = total / len
 end
 
 return Stats
