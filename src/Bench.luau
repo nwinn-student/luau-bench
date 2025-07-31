@@ -108,8 +108,6 @@ return function(fn: (...any)->(any), ...: any): BenchData
 		end
 	end
 	
-	local lenMemory = #memory
-	
 	-- Sort data
 	table.sort(speed)
 	table.sort(memory)
@@ -124,6 +122,8 @@ return function(fn: (...any)->(any), ...: any): BenchData
 	end
 	
 	if lastNegPos ~= 1 then
+		local lenMemory = #memory
+		
 		table.move(memory, lastNegPos, lenMemory, 1, memory)
 		
 		-- remove copies

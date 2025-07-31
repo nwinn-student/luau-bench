@@ -35,13 +35,12 @@ end
 function Stats.hist(data: BenchMetric)
 	local boxCount = 8
 	
-	data.Histogram.Range = (data.High - data.Low) / boxCount
-	
 	local hist = data.Histogram
 	local histLow = data.Low
-	local histRange = data.Histogram.Range
+	local histHigh = data.High
+	local histRange = (histHigh - histLow) / boxCount
+	hist.Range = (data.High - data.Low) / boxCount
 	
-	local total = 0
 	local len = #data.Data
 	
 	if histRange == 0 then
@@ -50,41 +49,47 @@ function Stats.hist(data: BenchMetric)
 		data.Average = data.Total / len
 		return
 	end
-	
+		
+	local total = 0	
 	local cache = 0
 	local cacheBox = 1
+	local priorV = -2^32
 	
-	for i,v in data.Data do
+	for _,v in data.Data do
 		total += v
-		-- place each value in a box
-		local box = (v - histLow) // histRange
 		
-		if box < 0 or box >= boxCount then
-			-- values matching High, few get in here, so this can be slower
-			if box == boxCount then
-				if cacheBox == box then
-					cache += 1
-				else
-					hist[cacheBox] = cache
+		if v == priorV then
+			cache += 1
+			continue
+		end
+		if v < histLow or v >= histHigh then
+			-- entered infrequently
+			if v == histHigh then
+				if cacheBox + 1 ~= boxCount then
+					hist[cacheBox + 1] = cache
 					cache = 1
-					cacheBox = box
 				end
+				cacheBox = boxCount - 1
+				priorV = histHigh
 			end
-			
 			continue
 		end
 		
-		if cacheBox == box + 1 then
+		-- place each value in a box (very slow)
+		local box = (v - histLow) // histRange
+		
+		if cacheBox == box then
 			cache += 1
 		else
-			hist[cacheBox] = cache
+			hist[cacheBox + 1] = cache
 			cache = 1
-			cacheBox = box + 1
+			cacheBox = box
 		end
+		priorV = v
 	end
 	
-	if hist[cacheBox] == 0 then
-		hist[cacheBox] = cache
+	if cacheBox + 1 == boxCount then
+		hist[boxCount] = cache
 	end
 		
 	-- maybe faster?
