@@ -92,7 +92,6 @@ function Stats.hist(data: BenchMetric)
 		hist[boxCount] = cache
 	end
 		
-	-- maybe faster?
 	data.Total = total
 	data.Average = total / len
 end

@@ -13,16 +13,21 @@ local Print = {}
 @native
 local function precision(x: number, n: number)
 	local value = nil
-	if math.abs(x) < 1e-9 then
+	
+	local absX = math.abs(x)
+	
+	if absX < 1e-9 then
 		return "0"
 	else
-		local exp = math.log10(math.abs(x)) // 1
-		value = x / math.pow(10, exp)..'e'..exp
+		local exp = math.log10(absX) // 1
 
 		if exp >= 0 then
 			-- ensure x is rounded to correct value
-			return math.round(x * math.pow(10, exp+1)) / math.pow(10, exp+1)..""
+			local decimalRound = math.pow(10, exp+1)
+			return (math.round(x * decimalRound) / decimalRound) .. ""
 		end
+		value = x / math.pow(10, exp)..'e'..exp
+		
 		if value:find("nan") then
 			return "nan"
 		end
@@ -33,14 +38,11 @@ local function precision(x: number, n: number)
 	local temp = value:split("e")
 	local first = temp[1]
 	if #first > n + 1 then
-		first = first:sub(1, n+1)
+		first = first:sub(1, n + 1)
 	elseif #first < n + 1 then
-		if first:split(".")[1] == first then
-			first ..= '.'
-		end
-		repeat 
-			first ..= '0'
-		until #first == n + 1
+		first ..= not first:find(".") and "."
+			.. string.rep("0", n - #first) or
+			string.rep("0", n + 1 - #first)
 	end
 	return first..'e'..temp[2]
 end
@@ -69,15 +71,13 @@ end
 ]]
 local function metricPrint(data: BenchMetric, other: BenchMetric?)
 	-- If any aspect is 0 we should NOT display it
-	local str = ""
-	
-	str ..= metricString(data.Minimum, other and other.Minimum, "Min")
-	str ..= metricString(data.Low, other and other.Low, "Low")
-	str ..= metricString(data.Median, other and other.Median, "Median")
-	str ..= metricString(data.Average, other and other.Average, "Avg")
-	str ..= metricString(data.High, other and other.High, "High")
-	str ..= metricString(data.Maximum, other and other.Maximum, "Max")
-	str ..= metricString(data.Total, other and other.Total, "Total")
+	local str = metricString(data.Minimum, other and other.Minimum, "Min")
+		.. metricString(data.Low, other and other.Low, "Low")
+		.. metricString(data.Median, other and other.Median, "Median")
+		.. metricString(data.Average, other and other.Average, "Avg")
+		.. metricString(data.High, other and other.High, "High")
+		.. metricString(data.Maximum, other and other.Maximum, "Max")
+		.. metricString(data.Total, other and other.Total, "Total")
 	
 	-- Will occur for memory, and RARELY for speed
 	if str == "" then
@@ -91,10 +91,12 @@ local function histPrint(data: BenchMetric)
 	local str = ""
 	local boxCount = data.Histogram.Range == 0 and 1 or 8
 	for i=1, boxCount do
-		if data.Histogram[i] == 0 then
+		local count = data.Histogram[i]
+		
+		if count == 0 then
 			continue
 		end
-		local count = data.Histogram[i]
+		
 		str ..= `\n            {
 			count..string.rep(" ", 6 - #tostring(count))
 		}({
@@ -125,6 +127,7 @@ function Print.benchPrint(self: BenchData): BenchData
 	}\n        Histogram:{
 		histPrint(self.Memory)
 	}{ self.Output and "\n    " .. tostring(self.Output) or "" }`
+	
 	print(str)
 	return self
 end
