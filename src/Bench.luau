@@ -37,6 +37,13 @@ local function updateOutput(self: BenchData, fn: (output: any)->(any)?): BenchDa
 	return self
 end
 
+local Bench = table.freeze({ __index = {
+	print = benchPrint,
+	compare = benchCompare,
+	withName = withName,
+	updateOutput = updateOutput	
+} })
+
 --[[
 	Runs and collects speed and memory metrics associated with the 
 		provided function.  The data is then partially statistically analyzed, 
@@ -48,7 +55,7 @@ end
 	@return benchmark data associated with the specified function
 ]]--
 return function(fn: (...any)->(any), ...: any): BenchData
-	local data: BenchData = {
+	local data: BenchData = setmetatable({
 		Name = "",
 		Output = nil,
 		Speed = {
@@ -77,7 +84,7 @@ return function(fn: (...any)->(any), ...: any): BenchData
 		compare = benchCompare,
 		withName = withName,
 		updateOutput = updateOutput
-	}
+	}, Bench)
 	
 	local speed = data.Speed.Data
 	local memory = data.Memory.Data
