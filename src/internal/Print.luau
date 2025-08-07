@@ -87,20 +87,26 @@ local function metricPrint(data: BenchMetric, other: BenchMetric?)
 end
 local function histPrint(data: BenchMetric)
 	local str = ""
-	local boxCount = data.Histogram.Range == 0 and 1 or 8
-	for i=1, boxCount do
-		local count = data.Histogram[i]
+	local hist = data.Histogram
+	local low = data.Low
+	local range = hist.Range
+	local boxCount = range == 0 and 1 or 8
+	
+	for i = 1, boxCount do
+		local count = hist[i]
 		
 		if count == 0 then
 			continue
 		end
 		
+		local strCount = tostring(count)
+		
 		str ..= `\n            {
-			count..string.rep(" ", 6 - #tostring(count))
+			strCount .. string.rep(" ", 6 - #strCount)
 		}({
-			precision(data.Low + data.Histogram.Range * (i - 1), 4)
+			precision(low + range * (i - 1), 4)
 		} to {
-			precision(data.Low + data.Histogram.Range * i, 4)
+			precision(low + range * i, 4)
 		})`
 	end
 	return str
