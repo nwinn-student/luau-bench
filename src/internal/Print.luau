@@ -12,39 +12,38 @@ local Print = {}
 
 @native
 local function precision(x: number, n: number)
-	local value = nil
-	
-	local absX = math.abs(x)
-	
+	if x ~= x then
+		return "nan"
+	end
+	if x == math.huge or x == -math.huge then
+		return "inf"
+	end
+
+	local absX = if x >= 0 then x else -x
 	if absX < 1e-9 then
 		return "0"
-	else
-		local exp = math.log10(absX) // 1
+	end
+	
+	local exp = math.log10(absX) // 1
+	if exp >= 0 then
+		-- ensure x is rounded to correct value
+		local decimalRound = math.pow(10, exp+1)
+		return (math.round(x * decimalRound) / decimalRound) .. ""
+	end
+	local value = x / math.pow(10, exp)
+	local strValue = tostring(value)
+	local len = #strValue
 
-		if exp >= 0 then
-			-- ensure x is rounded to correct value
-			local decimalRound = math.pow(10, exp+1)
-			return (math.round(x * decimalRound) / decimalRound) .. ""
-		end
-		value = x / math.pow(10, exp)..'e'..exp
-		
-		if value:find("nan") then
-			return "nan"
-		end
-		if value:find("inf") then
-			return "inf"
-		end
+	if len == n + 1 then
+		return strValue .. 'e' .. exp
+	elseif len > n + 1 then
+		return string.sub(strValue, 1, n + 1) .. 'e' .. exp
+	else
+		-- len < n + 1
+		local precZero = value % 1 == 0 and string.rep("0", n + 1 - len)
+			or "." .. string.rep("0", n - len)
+		return strValue .. precZero .. 'e' .. exp
 	end
-	local temp = value:split("e")
-	local first = temp[1]
-	if #first > n + 1 then
-		first = first:sub(1, n + 1)
-	elseif #first < n + 1 then
-		first ..= not first:find(".") and "."
-			.. string.rep("0", n - #first) or
-			string.rep("0", n + 1 - #first)
-	end
-	return first..'e'..temp[2]
 end
 
 local function metricString(data: number, other: number?, name: string)
