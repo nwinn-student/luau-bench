@@ -18,13 +18,12 @@ local function precision(x: number, n: number)
 	if x == math.huge or x == -math.huge then
 		return "inf"
 	end
-
-	local absX = if x >= 0 then x else -x
-	if absX < 1e-9 then
+	-- removed support for negative values since we abs them prior at input
+	if x < 1e-9 then
 		return "0"
 	end
 	
-	local exp = math.log10(absX) // 1
+	local exp = math.log10(x) // 1
 	if exp >= 0 then
 		-- ensure x is rounded to correct value
 		local decimalRound = math.pow(10, exp+1)
@@ -50,14 +49,14 @@ local function metricString(data: number, other: number?, name: string)
 	if data == 0 or other and other == 0 then
 		return ""
 	end
-	local dataStr = precision(math.abs(data), 4)
-	return `\n        {name}:{string.rep(" ", 7 - #name)}{
-		if math.sign(data) == -1 then "-" else if other then "+" else ""
+	local dataStr = precision(data >= 0 and data or -data, 4)
+	return `\n        {name}{
+		if data < 0 then "-" else if other then "+" else ""
 	}{ dataStr }{
 		if other then `{
 			string.rep(" ", 10 - #dataStr)
 		}({ 
-			math.sign(other) == 1 and "+" or "" 
+			other > 0 and "+" or "" 
 		}{ math.round(other * 10) / 10 }%)`
 		else ""
 	}`
@@ -70,13 +69,13 @@ end
 ]]
 local function metricPrint(data: BenchMetric, other: BenchMetric?)
 	-- If any aspect is 0 we should NOT display it
-	local str = metricString(data.Minimum, other and other.Minimum, "Min")
-		.. metricString(data.Low, other and other.Low, "Low")
-		.. metricString(data.Median, other and other.Median, "Median")
-		.. metricString(data.Average, other and other.Average, "Avg")
-		.. metricString(data.High, other and other.High, "High")
-		.. metricString(data.Maximum, other and other.Maximum, "Max")
-		.. metricString(data.Total, other and other.Total, "Total")
+	local str = metricString(data.Minimum, other and other.Minimum, "Min:    ")
+		.. metricString(data.Low, other and other.Low, "Low:    ")
+		.. metricString(data.Median, other and other.Median, "Median: ")
+		.. metricString(data.Average, other and other.Average, "Avg:    ")
+		.. metricString(data.High, other and other.High, "High:   ")
+		.. metricString(data.Maximum, other and other.Maximum, "Max:    ")
+		.. metricString(data.Total, other and other.Total, "Total:  ")
 	
 	-- Will occur for memory, and RARELY for speed
 	if str == "" then
