@@ -54,6 +54,8 @@ function Stats.hist(data: BenchMetric)
 	local cache = 0
 	local cacheBox = 1
 	local priorV = -2^32
+	local lowerBound = histLow
+	local upperBound = histLow + histRange
 	
 	for _,v in data.Data do
 		total += v
@@ -62,33 +64,33 @@ function Stats.hist(data: BenchMetric)
 			cache += 1
 			continue
 		end
-		if v < histLow or v >= histHigh then
-			-- entered infrequently
-			if v == histHigh then
-				if cacheBox + 1 ~= boxCount then
-					hist[cacheBox + 1] = cache
-					cache = 1
-				end
-				cacheBox = boxCount - 1
-				priorV = histHigh
-			end
+		
+		if lowerBound <= v and v <= upperBound then
+			cache += 1
+			priorV = v
 			continue
 		end
 		
-		-- place each value in a box (very slow)
-		local box = (v - histLow) // histRange
-		
-		if cacheBox == box then
-			cache += 1
-		else
-			hist[cacheBox + 1] = cache
-			cache = 1
-			cacheBox = box
+		if v < histLow or v > histHigh then
+			-- entered infrequently
+			continue
 		end
+		
+		local box = cacheBox
+		repeat
+			lowerBound += histRange
+			upperBound += histRange
+			box += 1
+		until lowerBound <= v and v <= upperBound
+		
+		hist[cacheBox] = cache
+		cache = 1
+		cacheBox = box
+		
 		priorV = v
 	end
 	
-	if cacheBox + 1 == boxCount then
+	if cacheBox == boxCount then
 		hist[boxCount] = cache
 	end
 		
