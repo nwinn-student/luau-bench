@@ -3,8 +3,7 @@ export type BenchHistogram = {
 	Range: number,
 }
 
-export type BenchMetric = {
-	Data: {number},
+type SimpleBenchMetric = {
 	Total: number,
 	Average: number,
 	Minimum: number,
@@ -12,18 +11,26 @@ export type BenchMetric = {
 	Low: number,
 	Median: number,
 	High: number,
-	Histogram: BenchHistogram
 }
+
+export type BenchMetric = {
+	Data: {number},
+	Histogram: BenchHistogram
+} & SimpleBenchMetric
 
 export type BenchCompareMetric = {
 	Name: string,
 	Speed: {
-		Percentage: BenchMetric,
-		Exact: BenchMetric
+		Data: {number},
+		Histogram: BenchHistogram,
+		Percentage: SimpleBenchMetric,
+		Exact: SimpleBenchMetric
 	},
 	Memory: {
-		Percentage: BenchMetric,
-		Exact: BenchMetric
+		Data: {number},
+		Histogram: BenchHistogram,
+		Percentage: SimpleBenchMetric,
+		Exact: SimpleBenchMetric
 	},
 }
 

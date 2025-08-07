@@ -48,7 +48,11 @@ return function(self: BenchData, ...: BenchData): BenchCompareData
 		print = benchComparePrint
 	}
 	
-	local hist = {Range = 0}	
+	local dataTab = {
+		Total = 0, Average = 0,
+		Minimum = 0, Maximum = 0,
+		Low = 0, Median = 0, High = 0,
+	}	
 	
 	for i,v in {...} do
 		-- compare
@@ -58,36 +62,16 @@ return function(self: BenchData, ...: BenchData): BenchCompareData
 		local value: BenchCompareMetric = {
 			Name = key,
 			Speed = {
-				Exact = {
-					Data = v.Speed.Data,
-					Total = 0, Average = 0,
-					Minimum = 0, Maximum = 0,
-					Low = 0, Median = 0, High = 0,
-					Histogram = hist
-				},
-				Percentage = {
-					Data = v.Speed.Data,
-					Total = 0, Average = 0,
-					Minimum = 0, Maximum = 0,
-					Low = 0, Median = 0, High = 0,
-					Histogram = hist
-				}
+				Data = v.Speed.Data,
+				Histogram = v.Speed.Histogram,
+				Exact = table.clone(dataTab),
+				Percentage = table.clone(dataTab)
 			},
 			Memory = {
-				Exact = {
-					Data = v.Memory.Data,
-					Total = 0, Average = 0,
-					Minimum = 0, Maximum = 0,
-					Low = 0, Median = 0, High = 0,
-					Histogram = hist
-				},
-				Percentage = {
-					Data = v.Memory.Data,
-					Total = 0, Average = 0,
-					Minimum = 0, Maximum = 0,
-					Low = 0, Median = 0, High = 0,
-					Histogram = hist
-				}
+				Data = v.Memory.Data,
+				Histogram = v.Memory.Histogram,
+				Exact = table.clone(dataTab),
+				Percentage = table.clone(dataTab)
 			}
 		}
 		
