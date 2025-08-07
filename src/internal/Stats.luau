@@ -39,7 +39,7 @@ function Stats.hist(data: BenchMetric)
 	local histLow = data.Low
 	local histHigh = data.High
 	local histRange = (histHigh - histLow) / boxCount
-	hist.Range = (data.High - data.Low) / boxCount
+	hist.Range = histRange
 	
 	local len = #data.Data
 	

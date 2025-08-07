@@ -79,11 +79,7 @@ return function(fn: (...any)->(any), ...: any): BenchData
 				0,0,0,0,0,0,0,0,
 				Range = 0
 			}
-		},
-		print = benchPrint,
-		compare = benchCompare,
-		withName = withName,
-		updateOutput = updateOutput
+		}
 	}, Bench)
 	
 	local speed = data.Speed.Data
