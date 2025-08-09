@@ -159,4 +159,15 @@ function Print.benchComparePrint(self: BenchCompareData)
 	print(str)
 end
 
+--[[
+	Converts a number into a string.
+	@ If the number is below 1, the specified decimal precision is applied.
+	
+	@param x the number
+	@param n the precision amount
+	
+	@return the string associated with the number
+]]--
+Print.precision = precision
+
 return Print
