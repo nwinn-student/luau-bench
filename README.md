@@ -10,10 +10,10 @@
 
 ## Purpose
 
-Bench is a general performance benchmarker that performs simple calculations with the obtained data and lets the user perform other necessary calculations.  Bench handles the number of times to run the function internally.  Bench does not keep data with negative values, such as memory when it has been GC'ed or when your function transcends time itself.  
+Bench is a general performance benchmarker that performs simple calculations with the obtained data and lets the user perform other necessary calculations.  Bench handles the number of times to run the function internally, capping at 5 seconds or 2048 runs, with a minimum of 30 runs.  Bench does not keep data with negative values, such as memory when it has been GC'ed or when your function transcends time itself. 
 
 ## Requirements
-[Luau 0.670+](https://github.com/luau-lang/luau/releases)
+[Luau 0.670+](https://github.com/luau-lang/luau/releases): As internal methods may shift to use @self to refer to each other.
 
 ## Credit
 The idea to add a histogram came from [Benchmarker](https://boatbomber.itch.io/benchmarker).  
@@ -25,6 +25,10 @@ A user needs to measure how expensive and fast a function is, they will use Benc
 A user needs to compare how different versions of a function perform, they will use Bench to perform metrics on each function, then Bench will again be used to obtain a comparison.
 
 ## Example
+
+More in-depth examples can be found in [examples](./examples).
+
+
 ```luau
 -- General benchmarking case
 local tab = {}
@@ -89,11 +93,6 @@ Name: Length Insert
 
 The speed / memory usage of this module matters not, however here are metrics about Bench using Bench.  
 
- * Notice that the count of values for speed doesn't match those for memory, this is due to the garbage collector.  
- * Notice that the range of values for the histogram doesn't include the minimum or maximum value.  The purpose is to ensure that the boxes can be more reflective of the data.  
- * Notice that the total for the speed is 5 seconds, this is one of the internal limitations.  
- * Notice that for the example, some aspects were non-existant, these aspects 0 seconds or kB and as such took up space without providing any information.  
-
 ```luau
 bench(bench, function() end)
 	:withName("Bench")
@@ -142,8 +141,8 @@ type BenchHistogram = {
 	[number]: number,
 	Range: number,
 }
-type BenchMetric = {
-	Data: {number},
+
+type SimpleBenchMetric = {
 	Total: number,
 	Average: number,
 	Minimum: number,
@@ -151,19 +150,40 @@ type BenchMetric = {
 	Low: number,
 	Median: number,
 	High: number,
-	Histogram: BenchHistogram
 }
-type BenchData = {
+
+type BenchMetric = {
+	Data: {number},
+	Histogram: BenchHistogram
+} & SimpleBenchMetric
+
+type BenchData = setmetatable<{
 	Name: string,
+	Output: any, -- useful if the user needs to verify the output OR they want to print it
 	Speed: BenchMetric,
 	Memory: BenchMetric,
-
-	print: (self: BenchData)-> BenchData,
-	-- will be explained later
-	compare: (self: BenchData, ...BenchData) -> BenchCompareData,
-	withName: (self: BenchData, name: string) -> BenchData
-}
+}, {
+	-- Can be modified externally as shown in examples
+	read __index: {
+		print: (self: BenchData)-> BenchData,
+		compare: (self: BenchData, ...BenchData) -> BenchCompareData,
+		withName: (self: BenchData, name: string) -> BenchData,
+		-- mainly used to prepare the value for printing (we just print the value itself)
+		updateOutput: (self: BenchData, fn: (output: any)->(any)?) -> BenchData,
+	}	
+}>
 ```
 `print`: Returns the input benchmark data after printing a summary of the data.
+
 `withName`: Returns the input benchmark data after changing the Name property to the input string.
 
+`updateOutput`: Returns the input benchmark data after modifying the Output property using the input function.
+
+`compare`: Takes in multiple benchmark data objects and returns benchmark comparison data.  The benchmark comparison data is of type:
+```luau
+export type BenchCompareData = {
+	[number]: BenchCompareMetric,
+	Name: string,
+	print: (self: BenchCompareData) -> ()
+}
+```
