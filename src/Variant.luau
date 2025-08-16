@@ -3,7 +3,7 @@ export type BenchHistogram = {
 	Range: number,
 }
 
-type SimpleBenchMetric = {
+export type SimpleBenchMetric = {
 	Total: number,
 	Average: number,
 	Minimum: number,
@@ -55,4 +55,4 @@ export type BenchData = setmetatable<{
 	}	
 }>
 
-return {}
+return nil

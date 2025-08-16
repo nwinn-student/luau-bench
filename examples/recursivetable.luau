@@ -1,4 +1,4 @@
-local bench = require("./Bench/Bench")
+local bench = require("./Bench")
 
 --[[
 	We want to go through all values in a table recursively.

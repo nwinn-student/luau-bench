@@ -1,5 +1,5 @@
-local bench = require("./Bench/Bench")
-local benchPrecision = require("./Bench/internal/Print").precision
+local bench = require("./Bench")
+local benchPrecision = require("./Bench/Print").precision
 
 local benchMethods = getmetatable(bench(function() end)).__index
 

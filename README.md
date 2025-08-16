@@ -13,7 +13,7 @@
 Bench is a general performance benchmarker that performs simple calculations with the obtained data and lets the user perform other necessary calculations.  Bench handles the number of times to run the function internally, capping at 5 seconds or 2048 runs, with a minimum of 30 runs.  Bench does not keep data with negative values, such as memory when it has been GC'ed or when your function transcends time itself. 
 
 ## Requirements
-[Luau 0.670+](https://github.com/luau-lang/luau/releases): As internal methods may shift to use @self to refer to each other.
+[Luau 0.687+](https://github.com/luau-lang/luau/releases): To return nil from a module.
 
 ## Credit
 The idea to add a histogram came from [Benchmarker](https://boatbomber.itch.io/benchmarker).  

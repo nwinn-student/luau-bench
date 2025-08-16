@@ -4,14 +4,12 @@ local Variant = require("./Variant")
 local benchComparePrint = require("./Print").benchComparePrint
 
 type BenchData = Variant.BenchData
-type BenchMetric = Variant.BenchMetric
 type BenchCompareData = Variant.BenchCompareData
 type BenchCompareMetric = Variant.BenchCompareMetric
-
-Variant = nil
+type SimpleBenchMetric = Variant.SimpleBenchMetric
 
 -- higher value means worse
-local function metricPerc(first: BenchMetric, second: BenchMetric, new: BenchMetric)
+local function metricPerc(first: SimpleBenchMetric, second: SimpleBenchMetric, new: SimpleBenchMetric)
 	new.Total = 100 * (second.Total - first.Total) / first.Total
 	new.Average = 100 * (second.Average - first.Average) / first.Average
 	new.Minimum = 100 * (second.Minimum - first.Minimum) / first.Minimum
@@ -22,7 +20,7 @@ local function metricPerc(first: BenchMetric, second: BenchMetric, new: BenchMet
 end
 
 -- higher value means worse
-local function metricExact(first: BenchMetric, second: BenchMetric, new: BenchMetric)
+local function metricExact(first: SimpleBenchMetric, second: SimpleBenchMetric, new: SimpleBenchMetric)
 	new.Total = second.Total - first.Total
 	new.Average = second.Average - first.Average
 	new.Minimum = second.Minimum - first.Minimum

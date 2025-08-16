@@ -1,4 +1,4 @@
-local bench = require("./Bench/Bench")
+local bench = require("./Bench")
 
 -- Shows that all are roughly the same
 bench(function(a, b)

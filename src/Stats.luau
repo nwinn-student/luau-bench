@@ -4,8 +4,6 @@ local Variant = require("./Variant")
 
 type BenchMetric = Variant.BenchMetric
 
-Variant = nil
-
 local Stats = {}
 
 @native

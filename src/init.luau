@@ -1,14 +1,12 @@
 --!optimize 2
 --!strict
 
-local Variant = require("./internal/Variant")
-local Stats = require("./internal/Stats")
-local benchPrint = require("./internal/Print").benchPrint
-local benchCompare = require("./internal/Compare")
+local Variant = require("@self/Variant")
+local Stats = require("@self/Stats")
+local benchPrint = require("@self/Print").benchPrint
+local benchCompare = require("@self/Compare")
 
 type BenchData = Variant.BenchData
-
-Variant = nil
 
 --[[
 	Applies the specified name to the benchmark data.

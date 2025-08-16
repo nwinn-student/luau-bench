@@ -5,8 +5,7 @@ local Variant = require("./Variant")
 type BenchData = Variant.BenchData
 type BenchMetric = Variant.BenchMetric
 type BenchCompareData = Variant.BenchCompareData
-
-Variant = nil
+type SimpleBenchMetric = Variant.SimpleBenchMetric
 
 local Print = {}
 
@@ -67,7 +66,7 @@ end
 	Compare:
 		Min: +1.234e-5  (+15%)
 ]]
-local function metricPrint(data: BenchMetric, other: BenchMetric?)
+local function metricPrint(data: SimpleBenchMetric, other: SimpleBenchMetric?)
 	-- If any aspect is 0 we should NOT display it
 	local str = metricString(data.Minimum, other and other.Minimum, "Min:    ")
 		.. metricString(data.Low, other and other.Low, "Low:    ")
