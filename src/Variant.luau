@@ -47,11 +47,13 @@ export type BenchData = setmetatable<{
 	Memory: BenchMetric,
 }, {
 	read __index: {
+		[any]: any, -- To avoid type errors when creating custom
+
 		print: (self: BenchData)-> BenchData,
 		compare: (self: BenchData, ...BenchData) -> BenchCompareData,
 		withName: (self: BenchData, name: string) -> BenchData,
 		-- mainly used to prepare the value for printing (we just print the value itself)
-		updateOutput: (self: BenchData, fn: (output: any)->(any)?) -> BenchData,
+		updateOutput: (self: BenchData, fn: ((output: any)->(any))?) -> BenchData,
 	}	
 }>
 

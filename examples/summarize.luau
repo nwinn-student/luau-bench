@@ -1,7 +1,9 @@
-local bench = require("./Bench")
+local internalBench = require("./Bench")
 local benchPrecision = require("./Bench/Print").precision
 
-local benchMethods = getmetatable(bench(function() end)).__index
+type BenchData = internalBench.BenchData
+
+local benchMethods = getmetatable(internalBench(function() end)).__index
 
 -- Shorter print message (somewhat aligned)
 function benchMethods:summarize(name: string)
@@ -14,6 +16,14 @@ function benchMethods:summarize(name: string)
 		benchPrecision(self.Memory.Average, 4)
 	} kB`)
 	return self
+end
+
+type SummarizedBenchData = BenchData & {
+	summarize: typeof(benchMethods.summarize)
+}
+
+local function bench(fn: (...any)->(any), ...: any)
+	return internalBench(fn, ...) :: SummarizedBenchData
 end
 
 bench(function() end)

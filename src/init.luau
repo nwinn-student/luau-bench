@@ -6,7 +6,7 @@ local Stats = require("@self/Stats")
 local benchPrint = require("@self/Print").benchPrint
 local benchCompare = require("@self/Compare")
 
-type BenchData = Variant.BenchData
+export type BenchData = Variant.BenchData
 
 --[[
 	Applies the specified name to the benchmark data.
@@ -30,7 +30,7 @@ end
 
 	@return the input benchmark data
 ]]--
-local function updateOutput(self: BenchData, fn: (output: any)->(any)?): BenchData
+local function updateOutput(self: BenchData, fn: ((output: any)->(any))?): BenchData
 	self.Output = fn and fn(self.Output) or nil
 	return self
 end
@@ -52,7 +52,7 @@ local Bench = table.freeze({ __index = {
 	
 	@return benchmark data associated with the specified function
 ]]--
-return function(fn: (...any)->(any), ...: any): BenchData
+return @native function(fn: (...any)->(any), ...: any): BenchData
 	local data: BenchData = setmetatable({
 		Name = "",
 		Output = nil,
