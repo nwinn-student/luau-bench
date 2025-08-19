@@ -4,7 +4,30 @@ local Variant = require("./Variant")
 
 type BenchMetric = Variant.BenchMetric
 
+--[[
+	MODIFIABLE CONSTANT
+	
+	The percentage away from the extreme ends 
+	high and low value will be.
+	
+	The default value (1) means that:
+	| Low will represent the lowest 1% of values 
+	| High will represent the highest 1% of values
+	
+	Values between 0 and 10 are recommended.
+]]--
+local DIST_PERC = 1
+
+local LOW_PERC = DIST_PERC / 100
+local HIGH_PERC = (100 - DIST_PERC) / 100
+
 local Stats = {}
+
+Stats.updateDistance = function(distancePercentage: number)
+	DIST_PERC = distancePercentage
+	LOW_PERC = DIST_PERC / 100
+	HIGH_PERC = (100 - DIST_PERC) / 100
+end
 
 @native
 function sum(t: {number})
@@ -23,10 +46,10 @@ function Stats.metrics(data: BenchMetric)
 	data.Minimum = dataTab[1]
 	data.Maximum = dataTab[lenData]
 	
-	local lowIndex = (0.01 * lenData) // 1
+	local lowIndex = (LOW_PERC * lenData) // 1
 	data.Low = dataTab[lowIndex ~= 0 and lowIndex or 1]
 	data.Median = dataTab[(0.5 * lenData) // 1]
-	data.High = dataTab[(0.99 * lenData) // 1]
+	data.High = dataTab[(HIGH_PERC * lenData) // 1]
 end
 
 @native
@@ -47,7 +70,7 @@ function Stats.hist(data: BenchMetric)
 		data.Average = data.Total / len
 		return
 	end
-		
+	
 	local total = 0	
 	local cache = 0
 	local cacheBox = 1
@@ -91,7 +114,7 @@ function Stats.hist(data: BenchMetric)
 	if cacheBox == boxCount then
 		hist[boxCount] = cache
 	end
-		
+	
 	data.Total = total
 	data.Average = total / len
 end
