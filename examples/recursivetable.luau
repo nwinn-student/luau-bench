@@ -33,7 +33,7 @@ end
 local function functionalrecursion(t)
 	for i, v in t do
 		if type(v) == "table" then
-			forloop(v)
+			functionalrecursion(v)
 			continue
 		end
 	end
