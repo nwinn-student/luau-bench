@@ -1,8 +1,8 @@
 --!optimize 2
 --!strict
 
-local Variant = require("@self/Variant")
 local Stats = require("@self/Stats")
+local Variant = require("@self/Variant")
 local benchPrint = require("@self/Print").benchPrint
 local benchCompare = require("@self/Compare")
 
@@ -15,7 +15,7 @@ export type BenchData = Variant.BenchData
 	@param name the name
 
 	@return the input benchmark data
-]]--
+]]
 local function withName(self: BenchData, name: string): BenchData
 	self.Name = name
 	return self
@@ -29,18 +29,23 @@ end
 		becomes the new output value
 
 	@return the input benchmark data
-]]--
-local function updateOutput(self: BenchData, fn: ((output: any)->(any))?): BenchData
+]]
+local function updateOutput(
+	self: BenchData,
+	fn: ((output: any) -> any)?
+): BenchData
 	self.Output = fn and fn(self.Output) or nil
 	return self
 end
 
-local Bench = table.freeze({ __index = {
-	print = benchPrint,
-	compare = benchCompare,
-	withName = withName,
-	updateOutput = updateOutput	
-} })
+local Bench = table.freeze({
+	__index = {
+		print = benchPrint,
+		compare = benchCompare,
+		withName = withName,
+		updateOutput = updateOutput,
+	},
+})
 
 --[[
 	Runs and collects speed and memory metrics associated with the 
@@ -51,49 +56,71 @@ local Bench = table.freeze({ __index = {
 	@param ... the arguments to send to the benchmarked function
 	
 	@return benchmark data associated with the specified function
-]]--
-return @native function(fn: (...any)->(any), ...: any): BenchData
+]]
+return @native function(fn: (...any) -> any, ...: any): BenchData
 	local data: BenchData = setmetatable({
 		Name = "",
 		Output = nil,
 		Speed = {
 			Data = {},
-			Total = 0, Average = 0,
-			Minimum = 0, Maximum = 0,
-			Low = 0, Median = 0, High = 0,
+			Total = 0,
+			Average = 0,
+			Minimum = 0,
+			Maximum = 0,
+			Low = 0,
+			Median = 0,
+			High = 0,
 			Histogram = {
 				-- 8 parts
-				0,0,0,0,0,0,0,0,
-				Range = 0
-			}
+				0,
+				0,
+				0,
+				0,
+				0,
+				0,
+				0,
+				0,
+				Range = 0,
+			},
 		},
 		Memory = {
 			Data = {},
-			Total = 0, Average = 0,
-			Minimum = 0, Maximum = 0,
-			Low = 0, Median = 0, High = 0,
+			Total = 0,
+			Average = 0,
+			Minimum = 0,
+			Maximum = 0,
+			Low = 0,
+			Median = 0,
+			High = 0,
 			Histogram = {
 				-- 8 parts
-				0,0,0,0,0,0,0,0,
-				Range = 0
-			}
-		}
+				0,
+				0,
+				0,
+				0,
+				0,
+				0,
+				0,
+				0,
+				Range = 0,
+			},
+		},
 	}, Bench)
-	
+
 	local speed = data.Speed.Data
 	local memory = data.Memory.Data
-	
+
 	local initialTime = os.clock()
-	
-	for i=1, 2_048 do
+
+	for i = 1, 2_048 do
 		local startMemory = gcinfo()
 		local startTime = os.clock()
 		local output = fn(...) -- ensure if there is an output, Luau doesn't somehow optimize it away
 		local endTime = os.clock() - startTime
-		
+
 		memory[i] = gcinfo() - startMemory
 		speed[i] = endTime
-		
+
 		-- Amount must be 30+ for statistical significance
 		if i < 30 then
 			if i == 1 then
@@ -101,46 +128,45 @@ return @native function(fn: (...any)->(any), ...: any): BenchData
 			end
 			continue
 		end
-		
+
 		-- Total time elapsed should be less than 5 seconds
 		if startTime - initialTime + endTime > 5.0 then
 			print(`TESTED: {i} times and took {os.clock() - initialTime} seconds`)
 			break
 		end
 	end
-	
+
 	-- Sort data
 	table.sort(speed)
 	table.sort(memory)
-	
+
 	-- All negative memory values will be removed
 	local lastNegPos = 0
-	for i,v in memory do
+	for i, v in memory do
 		if v >= 0 then
 			lastNegPos = i
 			break
 		end
 	end
-	
+
 	if lastNegPos ~= 1 then
 		local lenMemory = #memory
-		
+
 		table.move(memory, lastNegPos, lenMemory, 1, memory)
-		
+
 		-- remove copies
 		for i = lenMemory - lastNegPos, lenMemory do
 			memory[i] = nil
 		end
 	end
-	
-	
+
 	-- Standard deviation is NOT included
 	Stats.metrics(data.Speed)
 	Stats.metrics(data.Memory)
-	
+
 	-- Histogram Outlook
 	Stats.hist(data.Speed)
 	Stats.hist(data.Memory)
-	
+
 	return data
 end

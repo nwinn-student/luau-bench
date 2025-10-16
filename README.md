@@ -17,7 +17,7 @@ Bench is a general performance benchmarker that performs simple calculations wit
 
 ## Credit
 The idea to add a histogram came from [Benchmarker](https://boatbomber.itch.io/benchmarker).  
-You may notice that the results for the example comparing table.insert and #t + 1 differ from those in here.  That is due to the cost of calling a function
+You may notice that the results for the example comparing `table.insert` and `#t + 1` differ from those in here.  That is due to the cost of calling a function
 
 ## Usage Cases
 A user needs to measure how expensive and fast a function is, they will use Bench to obtain these metrics.

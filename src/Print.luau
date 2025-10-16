@@ -21,11 +21,11 @@ local function precision(x: number, n: number)
 	if x < 1e-9 then
 		return "0"
 	end
-	
+
 	local exp = math.log10(x) // 1
 	if exp >= 0 then
 		-- ensure x is rounded to correct value
-		local decimalRound = math.pow(10, exp+1)
+		local decimalRound = math.pow(10, exp + 1)
 		return (math.round(x * decimalRound) / decimalRound) .. ""
 	end
 	local value = x / math.pow(10, exp)
@@ -33,14 +33,14 @@ local function precision(x: number, n: number)
 	local len = #strValue
 
 	if len == n + 1 then
-		return strValue .. 'e' .. exp
+		return strValue .. "e" .. exp
 	elseif len > n + 1 then
-		return string.sub(strValue, 1, n + 1) .. 'e' .. exp
+		return string.sub(strValue, 1, n + 1) .. "e" .. exp
 	else
 		-- len < n + 1
 		local precZero = value % 1 == 0 and string.rep("0", n + 1 - len)
 			or "." .. string.rep("0", n - len)
-		return strValue .. precZero .. 'e' .. exp
+		return strValue .. precZero .. "e" .. exp
 	end
 end
 
@@ -49,16 +49,11 @@ local function metricString(data: number, other: number?, name: string)
 		return ""
 	end
 	local dataStr = precision(data >= 0 and data or -data, 4)
-	return `\n        {name}{
-		if data < 0 then "-" else if other then "+" else ""
-	}{ dataStr }{
-		if other then `{
-			string.rep(" ", 10 - #dataStr)
-		}({ 
-			other > 0 and "+" or "" 
-		}{ math.round(other * 10) / 10 }%)`
-		else ""
-	}`
+	return `\n        {name}{if data < 0 then "-" else if other then "+" else ""}{dataStr}{if other
+		then `{string.rep(" ", 10 - #dataStr)}({other > 0 and "+" or ""}{math.round(
+			other * 10
+		) / 10}%)`
+		else ""}`
 end
 --[[
 	Regular:
@@ -75,13 +70,14 @@ local function metricPrint(data: SimpleBenchMetric, other: SimpleBenchMetric?)
 		.. metricString(data.High, other and other.High, "High:   ")
 		.. metricString(data.Maximum, other and other.Maximum, "Max:    ")
 		.. metricString(data.Total, other and other.Total, "Total:  ")
-	
+
 	-- Will occur for memory, and RARELY for speed
 	if str == "" then
-		str = if other then "\n        [No difference]" 
+		str = if other
+			then "\n        [No difference]"
 			else "\n        [Non-existant]"
 	end
-	
+
 	return str
 end
 local function histPrint(data: BenchMetric)
@@ -90,71 +86,58 @@ local function histPrint(data: BenchMetric)
 	local low = data.Low
 	local range = hist.Range
 	local boxCount = range == 0 and 1 or 8
-	
+
 	for i = 1, boxCount do
 		local count = hist[i]
-		
+
 		if count == 0 then
 			continue
 		end
-		
+
 		local strCount = tostring(count)
-		
-		str ..= `\n            {
-			strCount .. string.rep(" ", 6 - #strCount)
-		}({
-			precision(low + range * (i - 1), 4)
-		} to {
-			precision(low + range * i, 4)
-		})`
+
+		str ..= `\n            {strCount .. string.rep(" ", 6 - #strCount)}({precision(
+			low + range * (i - 1),
+			4
+		)} to {precision(low + range * i, 4)})`
 	end
 	return str
 end
 
 --[[
 	Formats and prints the benchmark data.
-	
+
 	@param self the input benchmark data
 
 	@return the input benchmark data
-]]--
+]]
 function Print.benchPrint(self: BenchData): BenchData
-	local str = `Name: {
-		self.Name
-	}\n    Speed: [seconds]{
-		metricPrint(self.Speed)
-	}\n        Histogram:{
-		histPrint(self.Speed)
-	}\n    Memory: [kB]{
-		metricPrint(self.Memory)
-	}\n        Histogram:{
-		histPrint(self.Memory)
-	}{ self.Output and "\n    " .. tostring(self.Output) or "" }`
-	
+	local str =
+		`Name: {self.Name}\n    Speed: [seconds]{metricPrint(self.Speed)}\n        Histogram:{histPrint(
+			self.Speed
+		)}\n    Memory: [kB]{metricPrint(self.Memory)}\n        Histogram:{histPrint(
+			self.Memory
+		)}{self.Output and "\n    " .. tostring(self.Output) or ""}`
+
 	print(str)
 	return self
 end
 
 --[[
 	Formats and prints the comparison data.
-	
+
 	@param self the comparison data
-]]--
+]]
 function Print.benchComparePrint(self: BenchCompareData)
-	local str = `\nComparing against {
-		self.Name
-	}...\n\n`
-	
-	for i,v in ipairs(self) do
-		str ..= `Name: {
-			v.Name
-		}\n    Speed: [seconds]{
-			metricPrint(v.Speed.Exact, v.Speed.Percentage)
-		}\n    Memory: [kB]{
-			metricPrint(v.Memory.Exact, v.Memory.Percentage)
-		}\n`
+	local str = `\nComparing against {self.Name}...\n\n`
+
+	for i, v in ipairs(self) do
+		str ..= `Name: {v.Name}\n    Speed: [seconds]{metricPrint(
+			v.Speed.Exact,
+			v.Speed.Percentage
+		)}\n    Memory: [kB]{metricPrint(v.Memory.Exact, v.Memory.Percentage)}\n`
 	end
-	
+
 	print(str)
 end
 
@@ -166,7 +149,7 @@ end
 	@param n the precision amount
 	
 	@return the string associated with the number
-]]--
+]]
 Print.precision = precision
 
 return Print
