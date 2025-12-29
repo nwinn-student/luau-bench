@@ -79,12 +79,12 @@ Comparing against Table Insert...
 
 Name: Length Insert
     Speed: [seconds]
-        Avg:    +3.178e-8  (+28.5%)
-        Max:    +3.000e-6  (+54.5%)
-        Total:  +6.509e-5  (+28.5%)
+        Avg:    +2.451e-8  (+18.2%)
+        Max:    -8.000e-7  (-4.3%)
+        Total:  +5.020e-5  (+18.2%)
     Memory: [kB]
-        Avg:    -4.887e-4  (-11.1%)
-        Total:  -1         (-11.1%)
+        Avg:    -4.882e-4  (-3.2%)
+        Total:  -1         (-3.2%)
 ]]
 ```
 
