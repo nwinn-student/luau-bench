@@ -8,19 +8,23 @@ type BenchCompareData = Variant.BenchCompareData
 type BenchCompareMetric = Variant.BenchCompareMetric
 type SimpleBenchMetric = Variant.SimpleBenchMetric
 
+local function percentageDifference(first: number, second: number)
+	return 100 * (second - first) / ((second + first) / 2)
+end
+
 -- higher value means worse
 local function metricPerc(
 	first: SimpleBenchMetric,
 	second: SimpleBenchMetric,
 	new: SimpleBenchMetric
 )
-	new.Total = 100 * (second.Total - first.Total) / first.Total
-	new.Average = 100 * (second.Average - first.Average) / first.Average
-	new.Minimum = 100 * (second.Minimum - first.Minimum) / first.Minimum
-	new.Maximum = 100 * (second.Maximum - first.Maximum) / first.Maximum
-	new.Low = 100 * (second.Low - first.Low) / first.Low
-	new.Median = 100 * (second.Median - first.Median) / first.Median
-	new.High = 100 * (second.High - first.High) / first.High
+	new.Total = percentageDifference(first.Total, second.Total)
+	new.Average = percentageDifference(first.Average, second.Average)
+	new.Minimum = percentageDifference(first.Minimum, second.Minimum)
+	new.Maximum = percentageDifference(first.Maximum, second.Maximum)
+	new.Low = percentageDifference(first.Low, second.Low)
+	new.Median = percentageDifference(first.Median, second.Median)
+	new.High = percentageDifference(first.High, second.High)
 end
 
 -- higher value means worse
@@ -85,6 +89,8 @@ return function(self: BenchData, ...: BenchData): BenchCompareData
 			},
 		}
 
+		-- How does v's performance compare to self's
+		-- Is v faster than or slower than self? (+ = faster, - = slower)
 		metricPerc(self.Speed, v.Speed, value.Speed.Percentage)
 		metricPerc(self.Memory, v.Memory, value.Memory.Percentage)
 
